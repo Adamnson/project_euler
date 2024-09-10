@@ -1,5 +1,5 @@
 def prime_factors(num)
-  factors = (1..Math.sqrt(num).ceil).filter { |div| prime?(div) && (num % div).zero? }
+  factors = (1..Math.sqrt(num).ceil).filter { |div| (num % div).zero? }
   factors.filter { |f| prime?(f) }
 end
 
