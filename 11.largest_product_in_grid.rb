@@ -96,10 +96,11 @@ class Node
     @prod_mat = Array.new(3) { Array.new(3) { 0 } }
     @prod_mat[1][1] = MAT_20x20[row][col]
 
-    @right = get_right_elements(row, col)
-    @left  = get_left_elements(row, col)
-    @top   = get_top_elements(row, col)
+    @right  = get_right_elements(row, col)
+    @left   = get_left_elements(row, col)
+    @top    = get_top_elements(row, col)
     @bottom = get_bottom_elements(row, col)
+    @tld    = get_tld_elements(row, col)
   end
 
   def get_right_elements(row, col)
@@ -120,14 +121,12 @@ class Node
 
   def get_top_elements(row, col)
     top = []
-    if (row - LIMIT).positive?
-      LIMIT.times do |itr|
-        top.append(MAT_20x20[row - LIMIT + 1 + itr][col])
-      end
-    else
-      (LIMIT - row - 1).times { top.append(0) }
-      (row + 1).times do |itr|
-        top.append(MAT_20x20[itr][col])
+
+    (0...LIMIT).each do |itr|
+      if (row - itr) >= 0
+        top.unshift(MAT_20x20[row - itr][col])
+      else
+        top.unshift(0)
       end
     end
     top
@@ -135,24 +134,35 @@ class Node
 
   def get_bottom_elements(row, col)
     bottom = []
-    if (row + LIMIT) < MAT_20x20.size
-      LIMIT.times do |itr|
+
+    (0...LIMIT).each do |itr|
+      if (row + itr) < MAT_20x20.size
         bottom.append(MAT_20x20[row + itr][col])
+      else
+        bottom.append(0)
       end
-    else
-      (MAT_20x20.size - row).times do |itr|
-        bottom.append(MAT_20x20[row + itr][col])
-      end
-      (LIMIT - MAT_20x20.size + row).times { bottom.append(0) }
     end
     bottom
   end
+
+  def get_tld_elements(row, col)
+    tld = []
+    (0...LIMIT).each do |itr|
+      if (row - itr) >= 0 && (col - itr) >= 0
+        tld.unshift(MAT_20x20[row - itr][col - itr])
+      else
+        tld.unshift(0)
+      end
+    end
+    tld
+  end
 end
 
-nd = Node.new(14, 12)
+nd = Node.new(2, 0)
 p nd.prod_mat
 puts "right #{nd.right}"
 puts "left #{nd.left}"
 puts "top #{nd.top}"
 puts "bottom #{nd.bottom}"
+puts "tld #{nd.tld}"
 # puts " mat: #{MAT_20x20[0][0]}, prod_mat: #{nd.prod_mat[1][1]}"
