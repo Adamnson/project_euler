@@ -94,13 +94,16 @@ class Node
 
   def initialize(row, col)
     @prod_mat = Array.new(3) { Array.new(3) { 0 } }
-    @prod_mat[1][1] = MAT_20x20[row][col]
 
     @right  = get_right_elements(row, col)
     @left   = get_left_elements(row, col)
-    @top    = get_top_elements(row, col)
-    @bottom = get_bottom_elements(row, col)
-    @tld    = get_tld_elements(row, col)
+    get_top_elements(row, col)
+    get_bottom_elements(row, col)
+    get_tld_elements(row, col)
+    get_trd_elements(row, col)
+    get_bld_elements(row, col)
+    get_brd_elements(row, col)
+    update_prod_mat(row, col)
   end
 
   def get_right_elements(row, col)
@@ -120,49 +123,95 @@ class Node
   end
 
   def get_top_elements(row, col)
-    top = []
+    @top = []
 
     (0...LIMIT).each do |itr|
       if (row - itr) >= 0
-        top.unshift(MAT_20x20[row - itr][col])
+        @top.unshift(MAT_20x20[row - itr][col])
       else
-        top.unshift(0)
+        @top.unshift(0)
       end
     end
-    top
+    @prod_mat[0][1] = @top.inject(:*)
   end
 
   def get_bottom_elements(row, col)
-    bottom = []
+    @bottom = []
 
     (0...LIMIT).each do |itr|
       if (row + itr) < MAT_20x20.size
-        bottom.append(MAT_20x20[row + itr][col])
+        @bottom.append(MAT_20x20[row + itr][col])
       else
-        bottom.append(0)
+        @bottom.append(0)
       end
     end
-    bottom
+    @prod_mat[2][1] = @bottom.inject(:*)
   end
 
   def get_tld_elements(row, col)
-    tld = []
+    @tld = []
     (0...LIMIT).each do |itr|
       if (row - itr) >= 0 && (col - itr) >= 0
-        tld.unshift(MAT_20x20[row - itr][col - itr])
+        @tld.unshift(MAT_20x20[row - itr][col - itr])
       else
-        tld.unshift(0)
+        @tld.unshift(0)
       end
     end
-    tld
+    @prod_mat[0][0] = @tld.inject(:*)
+  end
+
+  def get_trd_elements(row, col)
+    @trd = []
+    (0...LIMIT).each do |itr|
+      if (row - itr) >= 0 && (col + itr) < MAT_20x20.size
+        @trd.unshift(MAT_20x20[row - itr][col + itr])
+      else
+        @trd.unshift(0)
+      end
+    end
+    @prod_mat[0][2] = @trd.inject(:*)
+  end
+
+  def get_bld_elements(row, col)
+    @bld = []
+    (0...LIMIT).each do |itr|
+      if (row + itr) < MAT_20x20.size && (col - itr) >= 0
+        @bld.unshift(MAT_20x20[row + itr][col - itr])
+      else
+        @bld.unshift(0)
+      end
+    end
+    @prod_mat[2][0] = @bld.inject(:*)
+  end
+
+  def get_brd_elements(row, col)
+    @brd = []
+    (0...LIMIT).each do |itr|
+      if (row + itr) < MAT_20x20.size && (col + itr) < MAT_20x20.size
+        @brd.unshift(MAT_20x20[row + itr][col + itr])
+      else
+        @brd.unshift(0)
+      end
+    end
+    @prod_mat[2][2] = @brd.inject(:*)
+  end
+
+  def update_prod_mat(row, col)
+    @prod_mat[1][0] = @left.inject(:*)
+    @prod_mat[1][1] = { el: MAT_20x20[row][col], row: row, col: col }
+    @prod_mat[1][2] = @right.inject(:*)
   end
 end
 
-nd = Node.new(2, 0)
+nd = Node.new(16, 12)
 p nd.prod_mat
 puts "right #{nd.right}"
 puts "left #{nd.left}"
 puts "top #{nd.top}"
 puts "bottom #{nd.bottom}"
 puts "tld #{nd.tld}"
-# puts " mat: #{MAT_20x20[0][0]}, prod_mat: #{nd.prod_mat[1][1]}"
+puts "trd #{nd.trd}"
+puts "bld #{nd.bld}"
+puts "brd #{nd.brd}"
+puts " mat: #{MAT_20x20[0][0]}, prod_mat: #{nd.prod_mat[1][1]}"
+p nd.prod_mat
