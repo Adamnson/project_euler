@@ -203,15 +203,27 @@ class Node
   end
 end
 
-nd = Node.new(16, 12)
-p nd.prod_mat
-puts "right #{nd.right}"
-puts "left #{nd.left}"
-puts "top #{nd.top}"
-puts "bottom #{nd.bottom}"
-puts "tld #{nd.tld}"
-puts "trd #{nd.trd}"
-puts "bld #{nd.bld}"
-puts "brd #{nd.brd}"
-puts " mat: #{MAT_20x20[0][0]}, prod_mat: #{nd.prod_mat[1][1]}"
-p nd.prod_mat
+# nd = Node.new(16, 12)
+# p nd.prod_mat
+# puts "right #{nd.right}"
+# puts "left #{nd.left}"
+# puts "top #{nd.top}"
+# puts "bottom #{nd.bottom}"
+# puts "tld #{nd.tld}"
+# puts "trd #{nd.trd}"
+# puts "bld #{nd.bld}"
+# puts "brd #{nd.brd}"
+# puts " mat: #{MAT_20x20[0][0]}, prod_mat: #{nd.prod_mat[1][1]}"
+# p nd.prod_mat
+
+max_prod = [0]
+(0...MAT_20x20.size).each do |row|
+  (0...MAT_20x20.size).each do |col|
+    node = Node.new(row, col)
+    max_val = [[node.prod_mat[1][0], node.prod_mat[1][2]].max,
+               node.prod_mat[0].max, node.prod_mat[2].max].max
+    max_prod = [max_val, node.prod_mat[1][1]] if max_prod[0] < max_val
+  end
+end
+
+p max_prod
