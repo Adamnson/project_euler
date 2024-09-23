@@ -1,7 +1,7 @@
 STR_20x20 = File.read("helper.11.largest_product_in_grid.md")
 
 MAT_20x20 = STR_20x20.lines.map { |line| line.split.map(&:to_i) }
-puts "mat dimensions: #{MAT_20x20.size}x#{MAT_20x20[0].size}"
+# puts "mat dimensions: #{MAT_20x20.size}x#{MAT_20x20[0].size}"
 # puts MAT_20x20
 
 LIMIT = 4
