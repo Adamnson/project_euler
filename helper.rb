@@ -14,6 +14,6 @@ def factorial(num)
   num * factorial(num - 1)
 end
 
-def nCr(n, r)
+def nCr(n, r) # rubocop:disable Naming/MethodParameterName,Naming/MethodName
   factorial(n) / (factorial(r) * factorial(n - r))
 end
