@@ -6,3 +6,14 @@ def prime?(num)
   end
   true
 end
+
+def factorial(num)
+  return 1 if num.eql?(0)
+  return num if num < 2
+
+  num * factorial(num - 1)
+end
+
+def nCr(n, r)
+  factorial(n) / (factorial(r) * factorial(n - r))
+end
