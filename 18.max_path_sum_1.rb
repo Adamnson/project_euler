@@ -1,10 +1,5 @@
-NUMBERS = File.read("helper.18.max_path_sum_1.md").split("\n")
-# NUMBERS = File.read("helper.18.max_path_sum_1_test.md").split("\n")
-
-# NUMBERS.each_with_index do |line, _idx|
-#   arr = line.split.map(&:to_i)
-#   p arr
-# end
+# NUMBERS = File.read("helper.18.max_path_sum_1.md").split("\n")
+NUMBERS = File.read("helper.18.max_path_sum_1_test.md").split("\n")
 
 # a node is associated with each number in the triange
 # each node has a left and a right node
@@ -51,34 +46,31 @@ class Tree
     end
   end
 
-  def assign_left_and_right_nodes(last_row_of_triangle)
+  def assign_left_and_right_nodes(last_row_of_triangle) # rubocop:disable Metrics/AbcSize
     @nodes.each do |node|
       next if node.row.eql?(last_row_of_triangle)
 
-      node.left = @nodes.filter { |e| e.row.eql?(node.row + 1) && e.col.eql?(node.col) }[0]
-      node.right = @nodes.filter { |e| e.row.eql?(node.row + 1) && e.col.eql?(node.col + 1) }[0]
+      node.left  = @nodes.select { |e| [e.row, e.col].eql?([node.row + 1, node.col]) }.shift
+      node.right = @nodes.select { |e| [e.row, e.col].eql?([node.row + 1, node.col + 1]) }.shift
     end
   end
 
   def update_sum_in_leaf_nodes
-    @nodes.filter { |e| e.leaf_node? }
+    @nodes.filter(&:leaf_node?)
           .map { |e| e.sum = [e.value, [e.value]] }
   end
 
-  def calc_sum_of_triangle(row_num, stop_row = 0)
+  def calc_sum_of_triangle(row_num, stop_row = 0) # rubocop:disable Metrics/AbcSize
     # start from the second last row (n-1 row)
     # calculate sum of node + left and node + right
     # store sum along with chain
-    # add up node(nodes in n-2 row) to a param list
-    # call function again with up node list
-    # if up node list contains only root, add root value and return max
+    # call function again with previous row
+    # if row_num is 0, add root value and return max
 
     nodes_list = @nodes.filter { |e| e.row.eql?(row_num) }
-    # puts "row: #{row_num}, size:#{nodes_list.size}"
     nodes_list.each do |node|
       better_node = node.left.sum[0] > node.right.sum[0] ? node.left : node.right
       node.sum = [better_node.sum[0] + node.value, [node.value].append(better_node.sum[1]).flatten]
-      # puts "#{row_num} v/s1/s2: #{node.value}, #{node.sum[0]}, #{node.sum[1]}"
       return node.sum if row_num.eql?(stop_row)
     end
     calc_sum_of_triangle(row_num - 1)
@@ -86,7 +78,7 @@ class Tree
 
   def pretty_print(node = @root, flag = 0, prefix = "", is_left: true)
     pretty_print(node.right, flag, "#{prefix}#{is_left ? '│   ' : '    '}", is_left: false) if node.right
-    puts "#{prefix}#{is_left ? '└── ' : '┌── '}#{flag.positive? ? node.sum : node.value}"
+    puts "#{prefix}#{is_left ? '└── ' : '┌── '}#{flag.positive? ? node.sum[0] : node.value}"
     pretty_print(node.left, flag, "#{prefix}#{is_left ? '    ' : '│   '}", is_left: true) if node.left
   end
 end
@@ -98,16 +90,9 @@ tree = Tree.new(NUMBERS)
 # puts tree.root.left.value
 # puts tree.root.right.value
 # puts tree.nodes.size
-
 # tree.pretty_print
+# tree.pretty_print(tree.root, 1) # special adaptation to print the sums
 
 sum, seq = tree.calc_sum_of_triangle(NUMBERS.size - 2)
 puts "sum is #{sum}"
 p seq
-# tree.pretty_print(@root, 1) # sum at a node gets overwritten
-# puts "agains"
-# sum, seq = tree.calc_sum_of_triangle(NUMBERS.size - 2, NUMBERS.size - 3)
-# puts "sum is #{sum}"
-# seq.each do |node|
-#   puts "#{node.value} on row #{node.row}"
-# end
