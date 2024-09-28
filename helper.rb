@@ -17,3 +17,12 @@ end
 def nCr(n, r) # rubocop:disable Naming/MethodParameterName,Naming/MethodName
   factorial(n) / (factorial(r) * factorial(n - r))
 end
+
+def sum_of_digits(num)
+  sum = 0
+  while num.positive?
+    sum += num % 10
+    num /= 10
+  end
+  sum
+end

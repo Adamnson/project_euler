@@ -1,10 +1,3 @@
-num = (2**1000)
+require("./helper")
 
-sum = 0
-
-while num.positive?
-  sum += num % 10
-  num /= 10
-end
-
-puts sum
+puts sum_of_digits(2**1000)
