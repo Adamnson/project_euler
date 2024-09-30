@@ -26,3 +26,7 @@ def sum_of_digits(num)
   end
   sum
 end
+
+def get_factors(num)
+  (1..num).filter { |div| (num % div).eql?(0) }
+end

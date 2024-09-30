@@ -1,10 +1,7 @@
-def get_factors(num)
-  (1..num).filter { |div| (num % div).eql?(0) }
-end
-
+require "./helper"
 num_divs = [0, [0]]
 n = 1
-while n < 10_000
+while n < 10_0
   tri_num = n * (n + 1) / 2
   factors = get_factors(tri_num)
   num_divs = [n, factors] if factors.count > num_divs[1].count
