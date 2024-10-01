@@ -1,21 +1,27 @@
-def Fibonacci(n)
-  return 1 if n <= 2
+# class FibNum stores the following data
+# n1, n2, n : three consequtive terms in the sequence
+# pos : position/index of n in the sequence
+# the next method, calculates the next number in the sequence
+#  and updates n1, n2 and pos
+class FibNum
+  attr_accessor :n1, :n2, :n, :pos
 
-  Fibonacci(n - 1) + Fibonacci(n - 2)
+  def initialize
+    @n1 = 1
+    @n2 = 1
+    @n = @n1 + @n2
+    @pos = 3
+  end
+
+  def next
+    @n1 = @n2
+    @n2 = @n
+    @n = @n1 + @n2
+    @pos += 1
+  end
 end
 
-def Fib(n, n1, n2)
-end
+f = FibNum.new
 
-# (1..12).each { |n| puts "F-#{n}: #{Fibonacci(n).to_s.size} " }
-
-num = 1
-fib_num = 1
-fib_num_len = fib_num.to_s.size
-
-while fib_num_len < 10
-  num += 1
-  fib_num = Fibonacci(num)
-  fib_num_len = fib_num.to_s.size
-  puts "f-#{num}: #{fib_num} [#{fib_num_len}]"
-end
+f.next while f.n.to_s.size < 1000
+p [f.n1, f.n2, f.n, f.pos]

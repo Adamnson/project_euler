@@ -12,5 +12,4 @@ pals = []
 end
 
 p pals, pals.count
-sum = 0
 p "sum : #{pals.map { |arr| arr[0].to_i }.inject(:+)}"
