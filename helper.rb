@@ -3,7 +3,7 @@ class Integer
     return false if self < 2
 
     (Math.sqrt(self) - 1).floor.times do |i|
-      return false if (self % (i + 2)).eql?(0)
+      return false if modulo(i + 2).eql?(0)
     end
     true
   end
@@ -41,5 +41,7 @@ def sum_of_digits(num)
 end
 
 def get_factors(num)
-  (1..num).filter { |div| (num % div).eql?(0) }
+  (1..num).filter { |div| (num.modulo div).eql?(0) }
 end
+
+puts get_factors(12)
