@@ -52,7 +52,7 @@ puts "   (2^2  3^3 5^3 )         * (2^5 7 11)       = #{2 * (3**3) * (5**3)}*#{(
 # def get_power(divisor, p)
 #   n = 0
 #   pn = p
-#   while (divisor % pn).eql?(0)
+#   while (divisor.modulo pn).eql?(0)
 #     n += 1
 #     pn = p**n
 #   end

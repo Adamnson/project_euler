@@ -34,7 +34,7 @@ end
 def sum_of_digits(num)
   sum = 0
   while num.positive?
-    sum += num % 10
+    sum += num.modulo 10
     num /= 10
   end
   sum

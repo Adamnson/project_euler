@@ -3,7 +3,7 @@ require "./helper"
 def smallest_multiple(num, prod = 1, current_factor = 1)
   return prod if current_factor > num
 
-  unless (prod % current_factor).eql?(0)
+  unless (prod.modulo current_factor).eql?(0)
     # find gcd of prod, current factor
     # divide current factor by gcd to get delta
     # multip delta to prod
@@ -21,7 +21,7 @@ def smallest_multiple(num, prod = 1, current_factor = 1)
 end
 
 def gcd(num1, num2)
-  ((1..[num1, num2].min).filter { |div| (num1 % div).eql?(0) && (num2 % div).eql?(0) })[-2]
+  ((1..[num1, num2].min).filter { |div| (num1.modulo div).eql?(0) && (num2.modulo div).eql?(0) })[-2]
 end
 
 puts smallest_multiple(20)

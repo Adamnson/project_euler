@@ -21,13 +21,15 @@ NAME = { 1 => "one", 2 => "two", 3 => "three", 4 => "four", 5 => "five",
 
 def get_name(num)
   return NAME[num] if NAME.keys.include?(num)
-  return "#{NAME[(num % 1000) - (num % 100)]} and #{NAME[num % 100]}" if (num > 100) && NAME.keys.include?(num % 100)
+  if (num > 100) && NAME.keys.include?(num.modulo(100))
+    return "#{NAME[(num.modulo 1000) - (num.modulo 100)]} and #{NAME[num.modulo 100]}"
+  end
 
   div = 10
   digit = 0
   english = ""
   while (num * 10 / div).positive?
-    digit = (num % div) - (num % (div / 10))
+    digit = (num.modulo div) - num.modulo(div / 10)
     english = div >= 1000 ? "#{NAME[digit]} and #{english}" : "#{NAME[digit]} #{english}"
     # puts "#{num}, #{div}, #{digit}"
     div *= 10

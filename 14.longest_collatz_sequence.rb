@@ -1,7 +1,7 @@
 def calc_collatz_sq_length(num, count = 0)
   return count if num.eql?(1)
 
-  if (num % 2).eql?(0)
+  if num.even?
     calc_collatz_sq_length(num / 2, count + 1)
   else
     calc_collatz_sq_length(((3 * num) + 1), count + 1)

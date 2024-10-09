@@ -1,7 +1,7 @@
 require "./helper"
 
 def prime_factors(num)
-  factors = (1..Math.sqrt(num).ceil).filter { |div| (num % div).zero? }
+  factors = (1..Math.sqrt(num).ceil).filter { |div| (num.modulo div).zero? }
   factors.filter(&:prime?)
 end
 

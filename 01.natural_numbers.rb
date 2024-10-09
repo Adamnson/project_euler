@@ -1,5 +1,5 @@
 def natural_sum(n)
-  (1...n).filter { |el| (el % 3).zero? || (el % 5).zero? }.sum
+  (1...n).filter { |el| (el.modulo 3).zero? || (el.modulo 5).zero? }.sum
 end
 
 puts natural_sum(10)

@@ -5,7 +5,7 @@ length = 0
   frac = (1.0 / denominator)
   string100 = ""
   25.times do
-    string100.concat((frac % 10).to_s)
+    string100.concat((frac.modulo 10).to_s)
     frac *= 10
   end
 

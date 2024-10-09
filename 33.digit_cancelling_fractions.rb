@@ -18,7 +18,7 @@ specials = []
 end
 p specials
 
-specials = specials.filter { |nums| nums[0] % 10 != 0 }
+specials = specials.filter { |nums| (nums[0].modulo 10) != 0 }
 p specials
 
 specials = specials.map { |nums| nums[0].to_f / nums[1] }
