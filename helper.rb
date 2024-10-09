@@ -1,11 +1,17 @@
-def prime?(num)
-  return false if num < 2
+class Integer
+  def prime?
+    return false if self < 2
 
-  (Math.sqrt(num) - 1).floor.times do |i|
-    return false if (num % (i + 2)).eql?(0)
+    (Math.sqrt(self) - 1).floor.times do |i|
+      return false if (self % (i + 2)).eql?(0)
+    end
+    true
   end
-  true
 end
+
+# def prime?(num)
+#   num.prime?
+# end
 
 def factorial(num)
   return 1 if num.eql?(0)

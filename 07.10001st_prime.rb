@@ -4,7 +4,7 @@ count = 0
 num = 1
 prime_nos = []
 while count < 10_001
-  if prime?(num)
+  if num.prime?
     count += 1
     prime_nos.append(num)
   end

@@ -1,6 +1,6 @@
 require "./helper"
 
-primes = (1..100).filter { |num| prime?(num) }
+primes = (1..100).filter(&:prime?)
 
 p primes
 init_num = 15
@@ -60,7 +60,7 @@ puts "   (2^2  3^3 5^3 )         * (2^5 7 11)       = #{2 * (3**3) * (5**3)}*#{(
 # end
 
 # def get_prime_factorization(divisor)
-#   get_factors(divisor).filter { |p| prime?(p) }
+#   get_factors(divisor).filter(&:prime?)
 #                       .map { |q| [q, get_power(divisor, q)] }
 # end
 

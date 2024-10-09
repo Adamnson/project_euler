@@ -16,4 +16,4 @@ p the_family
 the_family = the_family.map { |arr| arr.inject { |sum, n| (10 * sum) + n } }.filter { |el| el > 1000 }
 p the_family
 
-p "number_of_primes: #{the_family.filter { |el| prime?(el) }.count}"
+p "number_of_primes: #{the_family.filter(&:prime?).count}"

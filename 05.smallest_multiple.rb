@@ -9,7 +9,7 @@ def smallest_multiple(num, prod = 1, current_factor = 1)
     # multip delta to prod
 
     prod *= current_factor
-    unless prime?(current_factor)
+    unless current_factor.prime?
       gr8st_com_div = gcd(current_factor, prod)
       # puts "cf:#{current_factor} ,p: #{prod}, gcd: #{gr8st_com_div}"
       prod /= gr8st_com_div

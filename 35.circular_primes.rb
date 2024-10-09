@@ -13,9 +13,9 @@ def circular_permutaions(number)
 end
 
 (1..limit).each do |num|
-  next unless prime?(num)
+  next unless num.prime?
 
-  specials.append(num) if circular_permutaions(num).all? { |n| prime?(n) }
+  specials.append(num) if circular_permutaions(num).all?(&:prime?)
 end
 
 p specials.size, specials
