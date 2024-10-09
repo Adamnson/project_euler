@@ -7,21 +7,28 @@ class Integer
     end
     true
   end
+
+  def !
+    return 1 if eql?(0)
+    return self if self < 2
+
+    self * (self - 1).!
+  end
 end
 
 # def prime?(num)
 #   num.prime?
 # end
 
-def factorial(num)
-  return 1 if num.eql?(0)
-  return num if num < 2
+# def factorial(num)
+#   return 1 if num.eql?(0)
+#   return num if num < 2
 
-  num * factorial(num - 1)
-end
+#   num * factorial(num - 1)
+# end
 
 def nCr(n, r) # rubocop:disable Naming/MethodParameterName,Naming/MethodName
-  factorial(n) / (factorial(r) * factorial(n - r))
+  n.! / (r.! * (n - r).!)
 end
 
 def sum_of_digits(num)

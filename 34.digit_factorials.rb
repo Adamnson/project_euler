@@ -1,10 +1,10 @@
 require "./helper"
 specials = []
-limit = 9 * factorial(9)
+limit = 9 * 9.!
 sum_digit_factorials = lambda { |number|
   number.to_s.chars
         .map(&:to_i)
-        .map { |digit| factorial(digit) }
+        .map(&:!)
         .inject(:+)
         .eql?(number)
 }
