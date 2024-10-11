@@ -43,5 +43,3 @@ end
 def get_factors(num)
   (1..num).filter { |div| (num.modulo div).eql?(0) }
 end
-
-puts get_factors(12)
