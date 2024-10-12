@@ -16,17 +16,6 @@ class Integer
   end
 end
 
-# def prime?(num)
-#   num.prime?
-# end
-
-# def factorial(num)
-#   return 1 if num.eql?(0)
-#   return num if num < 2
-
-#   num * factorial(num - 1)
-# end
-
 def nCr(n, r) # rubocop:disable Naming/MethodParameterName,Naming/MethodName
   n.! / (r.! * (n - r).!)
 end
@@ -43,3 +32,15 @@ end
 def get_factors(num)
   (1..num).filter { |div| (num.modulo div).eql?(0) }
 end
+
+# #ARCHIVES
+# def prime?(num)
+#   num.prime?
+# end
+
+# def factorial(num)
+#   return 1 if num.eql?(0)
+#   return num if num < 2
+
+#   num * factorial(num - 1)
+# end
