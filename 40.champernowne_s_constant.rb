@@ -12,10 +12,7 @@
 # puts "#{'9'[1]}"
 
 # #Phase 3: formalizing approach, the grind
-def get_digit(index)
-  power = 0
-  accumulator = 0
-  increment = 0
+def get_digit(index, power = 0, accumulator = 0, increment = 0)
   while accumulator + increment < index
     accumulator += increment
     increment = 9 * 10.pow(power) * (power + 1)
