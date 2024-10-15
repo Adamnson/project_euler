@@ -16,3 +16,10 @@ end
     puts `ruby #{i}*.rb`
   end
 end
+
+(30...40).each do |i|
+  unless [31, 32, 38, 39].include?(i)
+    puts "running #{i}"
+    puts `ruby #{i}*.rb`
+  end
+end
