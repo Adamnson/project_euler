@@ -33,6 +33,13 @@ def get_factors(num)
   (1..num).filter { |div| (num.modulo div).eql?(0) }
 end
 
+class Array
+  # returns a number with the digits of the array
+  def to_i
+    map.each_with_index { |dig, idx| dig * 10.pow(size - 1 - idx) }.inject(:+)
+  end
+end
+
 # #ARCHIVES
 # def prime?(num)
 #   num.prime?
