@@ -14,6 +14,12 @@ class Integer
 
     self * (self - 1).!
   end
+
+  def factors
+    (1..Math.sqrt(self)).map { |div| [div, self / div] if modulo(div).eql?(0) }
+                        .compact
+                        .flatten
+  end
 end
 
 def nCr(n, r) # rubocop:disable Naming/MethodParameterName,Naming/MethodName
