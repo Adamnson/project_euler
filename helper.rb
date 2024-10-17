@@ -16,9 +16,9 @@ class Integer
   end
 
   def factors
-    (1..Math.sqrt(self)).map { |div| [div, self / div] if modulo(div).eql?(0) }
-                        .compact
-                        .flatten
+    (1..Math.sqrt(self).ceil).map { |div| [div, self / div] if modulo(div).eql?(0) }
+                             .compact
+                             .flatten.uniq
   end
 end
 
@@ -33,10 +33,6 @@ def sum_of_digits(num)
     num /= 10
   end
   sum
-end
-
-def get_factors(num)
-  (1..num).filter { |div| (num.modulo div).eql?(0) }
 end
 
 class Array
@@ -56,4 +52,8 @@ end
 #   return num if num < 2
 
 #   num * factorial(num - 1)
+# end
+
+# def get_factors(num)
+#   (1..num).filter { |div| (num.modulo div).eql?(0) }
 # end

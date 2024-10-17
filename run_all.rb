@@ -4,10 +4,8 @@
 end
 
 (10...20).each do |i|
-  unless i.eql?(12)
-    puts "running #{i}"
-    puts `ruby #{i}*.rb`
-  end
+  puts "running #{i}"
+  puts `ruby #{i}*.rb`
 end
 
 (20...30).each do |i|
