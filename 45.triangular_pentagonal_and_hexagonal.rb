@@ -2,7 +2,7 @@ require "./special_helper"
 
 commons = (000_000..50_000).map { |num| [num.hexagon_idx, num.pentagon_idx, num.triangle_idx] }
                            .map(&:compact)
-                           .reject { |g| g.empty? }
+                           .reject(&:empty?)
                            .filter { |arr| arr.size.eql?(3) }
 
 p commons

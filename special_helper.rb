@@ -17,21 +17,24 @@ class Integer
     self * ((2 * self) - 1)
   end
 
-  def triangle_idx # returns float or nil
+  # returns float or nil
+  def triangle_idx
     det = Math.sqrt(1 + (8 * self))
     [-1 + det, -1 - det].map! { |i| i / 2 }
                         .filter { |j| j.positive? && j.int? }
                         .shift
   end
 
-  def pentagon_idx # returns float or nil
+  # returns float or nil
+  def pentagon_idx
     det = Math.sqrt(1 + (24 * self))
     [1 + det, 1 - det].map! { |i| i / 6 }
                       .filter { |j| j.positive? && j.int? }
                       .shift
   end
 
-  def hexagon_idx # returns float or nil
+  # returns float or nil
+  def hexagon_idx
     det = Math.sqrt(1 + (8 * self))
     [1 + det, 1 - det].map! { |i| i / 4 }
                       .filter { |j| j.positive? && j.int? }
