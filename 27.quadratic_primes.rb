@@ -31,15 +31,15 @@ p(coeffs.map { |el| populate.call(el, limit) }
       .reject!(&:empty?)
       .filter { |el| el.size.eql? limit })
 
-# 1 + a + b = 911
-# 4 + 2a + b = 853
+# 1 + a + b = 911     [n=1]
+# 4 + 2a + b = 853    [n=2]
 # a + 3 = 853 - 911
 # a = = -61
-# b = 911 + 61 - 1 = 971
+# b = 911 + 61 - 1 = 971 [n = 0]
 
 eqn = ->(num) { (num**2) - (61 * num) + 971 }
 
-(1..10).map { |i| puts eqn.call(i) }
+(0..10).map { |i| puts eqn.call(i) }
 
-puts "#{971 * -61}"
-puts(populate.call([-61, 971], limit).all? { |el| el.prime? })
+puts "product a *b = #{971 * -61}"
+puts(populate.call([-61, 971], limit).all?(&:prime?))
