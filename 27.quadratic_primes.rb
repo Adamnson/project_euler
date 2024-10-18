@@ -21,12 +21,25 @@ quadratic = lambda { |ab, num|
 }
 
 populate = lambda { |ab, range|
-  (1..range).map { |num| quadratic.call(ab, num) }
+  (0..range).map { |num| quadratic.call(ab, num) }
             .filter(&:prime?)
 }
 
-limit = 70
+limit = 71
 
 p(coeffs.map { |el| populate.call(el, limit) }
       .reject!(&:empty?)
       .filter { |el| el.size.eql? limit })
+
+# 1 + a + b = 911
+# 4 + 2a + b = 853
+# a + 3 = 853 - 911
+# a = = -61
+# b = 911 + 61 - 1 = 971
+
+eqn = ->(num) { (num**2) - (61 * num) + 971 }
+
+(1..10).map { |i| puts eqn.call(i) }
+
+puts "#{971 * -61}"
+puts(populate.call([-61, 971], limit).all? { |el| el.prime? })
