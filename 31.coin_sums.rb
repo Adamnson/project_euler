@@ -1,21 +1,28 @@
 BASIS = [1, 2, 5, 10, 20, 50, 100, 200]
 
-def calc_combinations(number)
-  combinations = []
-  additional_count = 0
-  BASIS.each do |coin|
-    combinations.append([number, coin, number.divmod(coin)]) if coin <= number
-  end
-  p combinations
-  # big_combinations = combinations.map { |data| data[2][1] if data[2][1] > 1 }.flatten.slice(2, 2).to_a
-  big_combinations = combinations.filter { |data| data[2][1] if data[2][1] > 1 }
-  p "big combinations : #{big_combinations}"
-  additional_count = big_combinations.map { |i| calc_combinations(i[2][1]) }.inject(:+) || 0
-  p "inject on big_combs.map #{additional_count}"
-  combinations.count + additional_count
-end
+prod_mat = BASIS
 
-p calc_combinations(199)
+(2..8).each do |i|
+  prod_mat = prod_mat.product(BASIS).flatten.each_slice(i).to_a.filter { |el| el.inject(:+) < 200 }
+end
+p prod_mat.size
+
+# def calc_combinations(number)
+#   combinations = []
+#   additional_count = 0
+#   BASIS.each do |coin|
+#     combinations.append([number, coin, number.divmod(coin)]) if coin <= number
+#   end
+#   p combinations
+#   # big_combinations = combinations.map { |data| data[2][1] if data[2][1] > 1 }.flatten.slice(2, 2).to_a
+#   big_combinations = combinations.filter { |data| data[2][1] if data[2][1] > 1 }
+#   p "big combinations : #{big_combinations}"
+#   additional_count = big_combinations.map { |i| calc_combinations(i[2][1]) }.inject(:+) || 0
+#   p "inject on big_combs.map #{additional_count}"
+#   combinations.count + additional_count
+# end
+
+# p calc_combinations(199)
 
 # say we iterate from 1 to 200
 # 1 - min number of coins required to make 200p
