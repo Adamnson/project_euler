@@ -18,7 +18,7 @@ require "./helper"
 
 fractional_string = lambda { |denominator|
   str = ""
-  str_length = 20
+  str_length = 100
   first_occurance = true
   long_pattern = false
   hit = start_idx = diff = 0
@@ -54,22 +54,26 @@ fractional_string = lambda { |denominator|
   str
 }
 longest = ""
-d = 0
+max_len = d = 0
 # [7, 11, 13].each do |number|
-(1..100).each do |number|
+numbers = (1..100).to_a - [88, 104, 108]
+numbers.each do |number|
   num_string = fractional_string.call(number)
   puts "1/#{number} : #{num_string}"
   var = Regexp.new("([0-9]+)")
   repeating_pattern = num_string.split(var)
-  repeating_pattern.delete(")(")
-  repeating_pattern.delete("(")
-  repeating_pattern.delete(")")
-  repeating_pattern.delete("")
+  # repeating_pattern.delete(")(")
+  # repeating_pattern.delete("(")
+  # repeating_pattern.delete(")")
+  # repeating_pattern.delete("")
   # p repeating_pattern
-  if repeating_pattern[-1].size > longest.size
-    longest = repeating_pattern[-1]
+  longest_in_pattern = repeating_pattern.map(&:size).max
+  if longest_in_pattern > max_len
+    max_len = longest_in_pattern
+    longest = repeating_pattern.filter { |el| el.size == max_len }
     d = number
   end
+  p longest
 end
 
 puts "d: #{d}, pattern: #{longest}"
