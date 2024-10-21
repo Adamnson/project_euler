@@ -29,15 +29,15 @@ get_specials = lambda { |perm1, perm2|
   specials
 }
 pandigial_products = []
-pandigial_products.append(get_specials.call(factor2, factor2))
+# pandigial_products.append(get_specials.call(factor2, factor2))
+# pandigial_products.append(get_specials.call(factor3, factor3))
+# pandigial_products.append(get_specials.call(factor2, factor4))
+# pandigial_products.append(get_specials.call(factor3, factor4))
+# pandigial_products.append(get_specials.call(factor4, factor4))
+# pandigial_products.append(get_specials.call(factor1, factor5))
+# pandigial_products.append(get_specials.call(factor2, factor5))
 pandigial_products.append(get_specials.call(factor2, factor3))
-pandigial_products.append(get_specials.call(factor3, factor3))
-pandigial_products.append(get_specials.call(factor2, factor4))
-pandigial_products.append(get_specials.call(factor3, factor4))
-pandigial_products.append(get_specials.call(factor4, factor4))
 pandigial_products.append(get_specials.call(factor1, factor4))
-pandigial_products.append(get_specials.call(factor1, factor5))
-pandigial_products.append(get_specials.call(factor2, factor5))
 
 pandigial_products = pandigial_products.reject(&:empty?).flatten.each_slice(2).to_a
 p pandigial_products

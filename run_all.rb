@@ -9,14 +9,14 @@ end
 end
 
 (20...30).each do |i|
-  unless [26, 27].include?(i)
+  unless [26].include?(i)
     puts "running #{i}"
     puts `ruby #{i}*.rb`
   end
 end
 
 (30...40).each do |i|
-  unless [31, 32, 38, 39].include?(i)
+  unless [31, 38, 39].include?(i)
     puts "running #{i}"
     puts `ruby #{i}*.rb`
   end
