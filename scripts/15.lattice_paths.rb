@@ -1,4 +1,4 @@
-require "./helper"
+require "./helpers/helper"
 
 # to reach (n,n) in a grid, you need to take 2n steps
 # n vertical, n horizontal

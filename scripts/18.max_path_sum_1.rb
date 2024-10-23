@@ -1,5 +1,4 @@
-# NUMBERS = File.read("helper.18.max_path_sum_1.md").split("\n")
-NUMBERS = File.read("helper.18.max_path_sum_1_test.md").split("\n")
+NUMBERS = File.read("./helpers/helper.18.max_path_sum_1_test.md").split("\n")
 
 # a node is associated with each number in the triange
 # each node has a left and a right node

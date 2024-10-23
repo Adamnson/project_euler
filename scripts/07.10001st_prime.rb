@@ -1,4 +1,4 @@
-require "./helper"
+require "./helpers/helper"
 
 count = 0
 num = 1

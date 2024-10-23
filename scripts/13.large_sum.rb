@@ -1,4 +1,4 @@
-NUMBERS = File.read("helper.13.large_numbers.md").split("\n")
+NUMBERS = File.read("./helpers/helper.13.large_numbers.md").split("\n")
 
 loc = 1
 p [pos: NUMBERS[0][loc], num: NUMBERS[0]]

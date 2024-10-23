@@ -1,4 +1,4 @@
-require "./helper"
+require "./helpers/helper"
 
 def get_all_pandigitals(size)
   return 0 if size.eql?(0)

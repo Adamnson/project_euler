@@ -1,4 +1,4 @@
-require "./helper"
+require "./helpers/helper"
 
 UPPER_LIMIT = 28_123
 t1 = Time.now

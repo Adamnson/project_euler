@@ -1,6 +1,6 @@
-require "./helper"
+require "./helpers/helper"
 
-WORDS = File.read("helper.42.words.txt").split(",").map { |w| w.delete('"') }
+WORDS = File.read("./helpers/helper.42.words.txt").split(",").map { |w| w.delete('"') }
 
 sums = WORDS.map { |w| w.bytes.map { |ch| ch - 64 }.inject(:+) }
 p WORDS[41]

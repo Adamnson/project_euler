@@ -1,5 +1,5 @@
-require "./helper"
-require "./special_helper"
+require "./helpers/helper"
+require "./helpers/special_helper"
 # four
 
 t0 = Time.now

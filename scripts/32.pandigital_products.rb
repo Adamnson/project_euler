@@ -6,7 +6,7 @@ factor1 = basis.permutation(1)
 factor2 = basis.permutation(2)
 factor3 = basis.permutation(3)
 factor4 = basis.permutation(4)
-factor5 = basis.permutation(5)
+# factor5 = basis.permutation(5)
 
 get_specials = lambda { |perm1, perm2|
   specials = []
