@@ -8,6 +8,10 @@ class Integer
     true
   end
 
+  def composite?
+    !prime?
+  end
+
   def !
     return 1 if eql?(0)
     return self if self < 2

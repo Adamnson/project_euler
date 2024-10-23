@@ -16,7 +16,7 @@ end
 end
 
 (30...40).each do |i|
-  unless [31, 39].include?(i)
+  unless [31].include?(i)
     puts "running #{i}"
     puts `ruby scripts/#{i}*.rb`
   end

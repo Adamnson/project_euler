@@ -1,4 +1,4 @@
-require "./helpers/helper"
+require_relative "../helpers/helper"
 
 # class Float
 #   def pow(n)
@@ -56,7 +56,8 @@ fractional_string = lambda { |denominator|
 longest = ""
 max_len = d = 0
 # [7, 11, 13].each do |number|
-numbers = (1..100).to_a - [88, 104, 108]
+# numbers = (1..10).to_a
+numbers = [80]
 numbers.each do |number|
   num_string = fractional_string.call(number)
   puts "1/#{number} : #{num_string}"
