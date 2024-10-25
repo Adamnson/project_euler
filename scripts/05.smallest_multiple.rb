@@ -1,4 +1,4 @@
-require "./helpers/helper"
+require_relative "../helpers/helper"
 
 def smallest_multiple(num, prod = 1, current_factor = 1)
   return prod if current_factor > num

@@ -1,4 +1,4 @@
-require "./helpers/helper"
+require_relative "../helpers/helper"
 t0 = Time.now
 sum = 0
 (1..10_000).each do |itr|

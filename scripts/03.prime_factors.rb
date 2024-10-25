@@ -1,4 +1,4 @@
-require "./helpers/helper"
+require_relative "../helpers/helper"
 
 def prime_factors(num)
   factors = (1..Math.sqrt(num).ceil).filter { |div| (num.modulo div).zero? }

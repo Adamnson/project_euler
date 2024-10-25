@@ -1,4 +1,4 @@
-require "./helpers/helper"
+require_relative "../helpers/helper"
 
 #  n^2 + n + 41
 # determinant is -ve

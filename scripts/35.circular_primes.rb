@@ -1,4 +1,4 @@
-require "./helpers/helper"
+require_relative "../helpers/helper"
 
 limit = 1_000_000
 specials = []

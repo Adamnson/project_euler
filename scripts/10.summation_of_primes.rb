@@ -1,4 +1,4 @@
-require "./helpers/helper"
+require_relative "../helpers/helper"
 
 def sum_of_primes_under(limit)
   (1..limit).to_a.filter(&:prime?).inject(:+)

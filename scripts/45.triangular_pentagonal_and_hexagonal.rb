@@ -1,4 +1,4 @@
-require "./helpers/special_helper"
+require_relative "../helpers/special_helper"
 
 hpt = (1..1_000_000).map(&:hexagon)
                     .map { |hex| [hex.pentagon_idx, hex.triangle_idx] }

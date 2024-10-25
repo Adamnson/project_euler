@@ -1,4 +1,4 @@
-require "./helpers/helper"
+require_relative "../helpers/helper"
 
 primes = (1..1_000_000).filter(&:prime?)
 

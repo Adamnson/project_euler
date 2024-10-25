@@ -1,4 +1,4 @@
-require "./helpers/helper"
+require_relative "../helpers/helper"
 specials = []
 limit = 9 * 9.!
 sum_digit_factorials = lambda { |number|

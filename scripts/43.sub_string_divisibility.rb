@@ -1,4 +1,4 @@
-require "./helpers/helper"
+require_relative "../helpers/helper"
 
 basis = (0..9).to_a
 primes = [2, 3, 5, 7, 11, 13, 17]

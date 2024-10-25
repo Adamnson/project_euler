@@ -1,4 +1,4 @@
-D1000 = File.read("./helpers/helper.8.number.md").delete!("\n")
+D1000 = File.read("../helpers/helper.8.number.md").delete!("\n")
 
 def find_largest_product(size)
   # <<-DR4433
