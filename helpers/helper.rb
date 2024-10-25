@@ -19,15 +19,15 @@ class Integer
     self * (self - 1).!
   end
 
+  def C(r)
+    self.! / (r.! * (self - r).!)
+  end
+
   def factors
     (1..Math.sqrt(self).ceil).map { |div| [div, self / div] if modulo(div).eql?(0) }
                              .compact
                              .flatten.uniq
   end
-end
-
-def nCr(n, r) # rubocop:disable Naming/MethodParameterName,Naming/MethodName
-  n.! / (r.! * (n - r).!)
 end
 
 def sum_of_digits(num)

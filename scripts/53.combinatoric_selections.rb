@@ -1,11 +1,5 @@
 require_relative "../helpers/helper"
 
-class Integer
-  def C(r)
-    self.! / (r.! * (self - r).!)
-  end
-end
-
 puts 23.C(10)
 count = 0
 (1..100).each do |n|
