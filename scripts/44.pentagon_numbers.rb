@@ -1,4 +1,4 @@
-require_relative "../special_helper"
+require_relative "../helpers/special_helper"
 
 sum_diff_idx = lambda { |low, high|
   (low..high).map(&:pentagon)
