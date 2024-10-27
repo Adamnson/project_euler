@@ -1,3 +1,5 @@
+require "rainbow/refinement"
+
 Dir.chdir("./scripts/")
 
 (1..50).each do |i|
@@ -9,7 +11,7 @@ Dir.chdir("./scripts/")
   else
     puts `ruby #{i}*.rb :out => out.md`
   end
-  print "#{i}}%{ success!"
+  print "#{i}" + Rainbow(" }%{ ").deeppink + Rainbow("success!").springgreen
   text = "#{Time.now - t0} \n"
   File.write("time.md", text, mode: "a")
 end
