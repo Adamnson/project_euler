@@ -1,4 +1,4 @@
-require "rainbow/refinement"
+require "rainbow"
 
 Dir.chdir("./scripts/")
 
