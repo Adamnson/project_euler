@@ -1,4 +1,15 @@
 require_relative "../helpers/helper"
+require 'pry-byebug'
+
+str = ""
+str_length = 100
+(1..15).each do |denominator|
+  (1..str_length).each do |i|
+    str+=((10.pow(i) / denominator).modulo 10).to_s
+  end
+puts str
+str = ""
+end
 
 # class Float
 #   def pow(n)
@@ -16,68 +27,70 @@ require_relative "../helpers/helper"
 
 # three
 
-fractional_string = lambda { |denominator|
-  str = ""
-  str_length = 100
-  first_occurance = true
-  long_pattern = false
-  hit = start_idx = diff = 0
-  pattern = rep = ""
-  count = 0
-  (1..str_length).each do |i|
-    digit = ((10.pow(i) / denominator).modulo 10).to_s
-    if str.include?(digit) && first_occurance
-      hit = str.index(digit)
-      # start_idx = i
-      diff = str.length - hit
-      first_occurance = false
-      pattern = str.slice(hit, diff)
-      count += 1
-      digit = "(#{digit})"
-      long_pattern = diff > 1
-      # puts "hit found for #{i}, hit: #{hit}, diff: #{diff}, pattern: #{pattern}"
-    elsif str.include?(digit) && pattern.include?(digit)
-      # validate it is a repeating pattern and not just a random appearance in a non repeating sequence
-      rep += digit
-      if (count == diff) && !long_pattern
-        digit = "(#{digit})"
-        rep = ""
-      else
-        count += 1
-        str += "(#{pattern})" if count == diff
-        rep = "" if count == diff
-        count = 1 if count == diff
-      end
-    end
-    str += digit unless long_pattern
-  end
-  str
-}
-longest = ""
-max_len = d = 0
-# [7, 11, 13].each do |number|
-# numbers = (1..10).to_a
-numbers = [80]
-numbers.each do |number|
-  num_string = fractional_string.call(number)
-  puts "1/#{number} : #{num_string}"
-  var = Regexp.new("([0-9]+)")
-  repeating_pattern = num_string.split(var)
-  # repeating_pattern.delete(")(")
-  # repeating_pattern.delete("(")
-  # repeating_pattern.delete(")")
-  # repeating_pattern.delete("")
-  # p repeating_pattern
-  longest_in_pattern = repeating_pattern.map(&:size).max
-  if longest_in_pattern > max_len
-    max_len = longest_in_pattern
-    longest = repeating_pattern.filter { |el| el.size == max_len }
-    d = number
-  end
-  p longest
-end
+# fractional_string = lambda { |denominator|
+#   str = ""
+#   str_length = 100
+#   first_occurance = true
+#   long_pattern = false
+#   hit = start_idx = diff = 0
+#   pattern = rep = ""
+#   count = 0
+#   (1..str_length).each do |i|
+#     digit = ((10.pow(i) / denominator).modulo 10).to_s
+#     if str.include?(digit) && first_occurance
+#       hit = str.index(digit)
+#       # start_idx = i
+#       diff = str.length - hit
+#       first_occurance = false
+#       pattern = str.slice(hit, diff)
+#       count += 1
+#       digit = "(#{digit})"
+#       long_pattern = diff > 1
+#       # puts "hit found for #{i}, hit: #{hit}, diff: #{diff}, pattern: #{pattern}"
+#     elsif str.include?(digit) && pattern.include?(digit)
+#       binding.pry
+#       # validate it is a repeating pattern and not just a random appearance in a non repeating sequence
+#       rep += digit
+#       if (count == diff) && !long_pattern
+#         digit = "(#{digit})"
+#         rep = ""
+#       else
+#         count += 1
+#         str += "(#{pattern})" if count == diff
+#         rep = "" if count == diff
+#         count = 1 if count == diff
+#       end
+#     end
+#     str += digit unless long_pattern
+#   end
+#   str
+# }
+# longest = ""
+# max_len = d = 0
+# # [7, 11, 13].each do |number|
+# # numbers = (1..10).to_a
+# numbers = [84]
+# # numbers = (1..10).to_a
+# numbers.each do |number|
+#   num_string = fractional_string.call(number)
+#   puts "1/#{number} : #{num_string}"
+#   var = Regexp.new("([0-9]+)")
+#   repeating_pattern = num_string.split(var)
+#   repeating_pattern.delete(")(")
+#   repeating_pattern.delete("(")
+#   repeating_pattern.delete(")")
+#   repeating_pattern.delete("")
+#   # p repeating_pattern
+#   longest_in_pattern = repeating_pattern.map(&:size).max
+#   if longest_in_pattern > max_len
+#     max_len = longest_in_pattern
+#     longest = repeating_pattern.filter { |el| el.size == max_len }
+#     d = number
+#   end
+#   puts "longest: #{longest}"
+# end
 
-puts "d: #{d}, pattern: #{longest}"
+# puts "d: #{d}, pattern: #{longest}"
 # specials = []
 # (1..10).each do |number|
 #   num_string = fractional_string.call(number)

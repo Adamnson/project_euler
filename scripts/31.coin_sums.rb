@@ -1,11 +1,55 @@
 BASIS = [1, 2, 5, 10, 20, 50, 100, 200]
 
-prod_mat = BASIS
+#
+# 1    2     5    10   20   50   100 200
+# 0.01 0.02 0.05  0.1  0.2  0.5  1   2
 
-(2..8).each do |i|
-  prod_mat = prod_mat.product(BASIS).flatten.each_slice(i).to_a.filter { |el| el.inject(:+) < 200 }
-end
-p prod_mat.size
+values = BASIS.map { |el| el / 100.0 }
+p values
+
+value_based_inject = lambda { |arr|
+  ret_val = 0
+  arr.each_with_index do |number, idx|
+    ret_val += number * (BASIS[-1 - idx] / 100.0)
+  end
+  ret_val
+}
+
+# t0 = Time.now
+# (0..50).to_a.repeated_permutation(5)
+#        #  .map { |el| el.append((el[0] * 200) + (el[1] * 100) + (el[2] * 50)) }
+#        .reject { |el| value_based_inject.call(el) > 2.0 }
+#        .map { |el| p el }
+#        .filter { |el| el.last == 2.0 }
+#        .map { |el| puts "match: #{el}" }
+#        .size
+# .map { |el| p el }
+
+# puts "time : #{Time.now - t0}"
+
+sizes200 = [0, 1]
+sizes100 = [0, 1, 2]
+sizes50 = (0..4).to_a
+sizes20 = (0..10).to_a
+sizes10 = (0..20).to_a
+sizes5 = (0..40).to_a
+sizes2 = (0..100).to_a
+sizes1 = (0..200).to_a
+t0 = Time.now
+mega_sizes = sizes200.product(sizes100, sizes50, sizes50, sizes10, sizes10, sizes10, sizes20)
+
+p mega_sizes.select { |el| value_based_inject.call(el) == 2.0 }
+            .map { |el| p el }
+            .size
+puts Time.now - t0
+# two
+# BASIS = [1, 2, 5, 10, 20, 50, 100, 200]
+# prod_mat = BASIS
+
+# (2..8).each do |i|
+#   prod_mat = prod_mat.product(BASIS).flatten.each_slice(i).to_a.filter { |el| el.inject(:+) < 200 }
+# end
+# p prod_mat.size
 
 # def calc_combinations(number)
 #   combinations = []
