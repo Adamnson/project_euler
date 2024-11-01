@@ -2,7 +2,7 @@ require_relative "../helpers/helper"
 
 ints = (0..9).to_a
 
-ints.product(ints, ints, ints).each do |basis|
+ints.repeated_combination(4).each do |basis|
   basis.permutation
        .map(&:to_i).filter { |el| el > 1000 }
        .permutation(3).map(&:sort).uniq
