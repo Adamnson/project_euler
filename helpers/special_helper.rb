@@ -9,6 +9,10 @@ class Integer
     self * (self + 1) / 2
   end
 
+  def square
+    self**2
+  end
+
   def pentagon
     self * ((3 * self) - 1) / 2
   end
@@ -17,28 +21,66 @@ class Integer
     self * ((2 * self) - 1)
   end
 
+  def heptagon
+    self * ((5 * self) - 3) / 2
+  end
+
+  def octagon
+    self * ((3 * self) - 2)
+  end
+
   # returns float or nil
+  # Tn = n(n + 1)/2
+  # 2Tn = n**2 + n
+  # n**2 + n - 2Tn = 0
   def triangle_idx
-    det = Math.sqrt(1 + (8 * self))
-    [-1 + det, -1 - det].map! { |i| i / 2 }
+    get_positive_root(1, 1, -2 * self)
+  end
+
+  # returns float or nil
+  # Sn = n**2
+  # n**2 - Sn = 0
+  def square_idx
+    get_positive_root(1, 0, -self)
+  end
+
+  # returns float or nil
+  # Pn = n(3*n - 1)/2
+  # 2Pn = 3n**2 - n
+  # 3n**2 - n -2Pn = 0
+  def pentagon_idx
+    get_positive_root(3, -1, -2 * self)
+  end
+
+  # returns float or nil
+  # Hn = n(2*n - 1)
+  # Hn = 2n**2 - n
+  # 2n**2 - n - Hn = 0
+  def hexagon_idx
+    get_positive_root(2, -1, -self)
+  end
+
+  # returns float or nil
+  # Hp = n(5*n -3)/2
+  # 2Hp = 5n**2 - 3*n
+  # 5n**2 - 3*n - 2Hp = 0
+  def heptagon_idx
+    get_positive_root(5, -3, -2 * self)
+  end
+
+  # returns float or nil
+  # On = n(3*n - 2)
+  # On = 3n**2 - 2n
+  # 3n**2 - 2*n - On = 0
+  def octagon_idx
+    get_positive_root(3, -2, -self)
+  end
+
+  def get_positive_root(a, b, c)
+    det = Math.sqrt((b**2) - (4 * a * c))
+    [-b + det, -b - det].map! { |i| i / (2 * a) }
                         .filter { |j| j.positive? && j.int? }
                         .shift
-  end
-
-  # returns float or nil
-  def pentagon_idx
-    det = Math.sqrt(1 + (24 * self))
-    [1 + det, 1 - det].map! { |i| i / 6 }
-                      .filter { |j| j.positive? && j.int? }
-                      .shift
-  end
-
-  # returns float or nil
-  def hexagon_idx
-    det = Math.sqrt(1 + (8 * self))
-    [1 + det, 1 - det].map! { |i| i / 4 }
-                      .filter { |j| j.positive? && j.int? }
-                      .shift
   end
 end
 
