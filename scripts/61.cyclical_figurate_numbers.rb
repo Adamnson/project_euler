@@ -14,9 +14,9 @@ require "pry-byebug"
 # puts([1, 7, 18, 34, 55].map { |i| i.heptagon_idx })
 # puts([1, 8, 21, 40, 65].map { |i| i.octagon_idx })
 
-BASIS = %w[0 1 2 3 4 5 6 7 8 9]
+# BASIS = %w[0 1 2 3 4 5 6 7 8 9]
 
-two_digits = BASIS.repeated_permutation(2)
+# two_digits = BASIS.repeated_permutation(2)
 
 # two_digits.map { |el| el.inject(:+) }
 #           .reject { |el| el.start_with?("0") }
@@ -70,6 +70,7 @@ tris = (1..142).to_a.map(&:triangle)
 
 mega_set = []
 mega_set.concat(octs, sept, hexs, pent, sqrs, tris)
+mega_set = mega_set.uniq
 mega_set = mega_set.filter { |num| num.between?(1000, 9999) }
 MS = mega_set
 puts "mega set : #{mega_set.size}"
@@ -112,23 +113,25 @@ t6 = Time.now
 specials = []
 chain6.each do |set_of_sequences|
   set_of_sequences.each do |sequence|
-    eval_arr = [sequence.last, sequence.first]
-    eval_arr.append(cyclic?(eval_arr))
-    if eval_arr.last # rubocop:disable Style/Next
-      tri_num = sequence.intersection(tris).one?
-      sq_num = sequence.intersection(sqrs).one?
-      pent_num = sequence.intersection(pent).one?
-      hex_num = sequence.intersection(hexs).one?
-      sept_num = sequence.intersection(sept).one?
-      oct_num = sequence.intersection(octs).one?
-
-      specials.append(sequence) if tri_num && sq_num && pent_num && hex_num && sept_num && oct_num
-    end
+    specials.append(sequence) if all_cyclic.call(sequence)
   end
 end
 t_filt = Time.now
 p specials
 p specials.size
+
+specials.each do |sq|
+  tri_num = sq.intersection(tris)
+  sq_num = sq.intersection(sqrs)
+  pent_num = sq.intersection(pent)
+  hex_num = sq.intersection(hexs)
+  sept_num = sq.intersection(sept)
+  oct_num = sq.intersection(octs)
+  presence_condition = tri_num.one? && sq_num.one? && pent_num.one? && hex_num.one? && sept_num.one? && oct_num.one?
+  # unique_condition = (sequence.count(tri_num) == 1) && (sequence.count(sq_num) == 1) && (sequence.count(pent_num) == 1) && (sequence.count(hex_num) == 1) && (sequence.count(sept_num) == 1) && (sequence.count(oct_num) == 1)
+
+  puts "found #{sq}" if presence_condition # && unique_condition
+end
 
 puts "extending 2 to 3 : #{t3 - t2}"
 puts "extending 3 to 4 : #{t4 - t3}"
@@ -156,3 +159,18 @@ puts "finding sets : #{t_filt - t6}"
 # extending 4 to 5 : 11.129886469
 # extending 5 to 6 : 56.6917714
 # finding sets : 0.245731697
+
+# mega_set.uniq
+# mega set : 299
+# size2 299
+# size3 :889
+# size4: 2661
+# size5: 7957
+# size6: 23810
+# []
+# 0
+# extending 2 to 3 : 0.460597973
+# extending 3 to 4 : 1.36717381
+# extending 4 to 5 : 4.406571893
+# extending 5 to 6 : 18.817721291
+# finding sets : 1.123641837
