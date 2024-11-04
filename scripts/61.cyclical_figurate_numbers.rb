@@ -72,120 +72,48 @@ mega_set = []
 mega_set.concat(octs, sept, hexs, pent, sqrs, tris)
 mega_set = mega_set.filter { |num| num.between?(1000, 9999) }
 MS = mega_set
-# puts tris.include?(8128)
-# sqrs, pent, hexs, sept,
-
-# puts mega_set
-# puts octs.size
-# puts sept.size
 puts "mega set : #{mega_set.size}"
-# puts "8128 : #{mega_set.include?(8128)}"
-# puts "2882 : #{mega_set.include?(2882)}"
-
-# t0 = Time.now
-# mega_set.repeated_permutation(3)
-#         .reject { |el| el.first == el.last && el.last == el[1] }
-#         .filter { |el| all_cyclic.call el }.map { |el| p el }
-# puts Time.now - t0
 
 get_list_of_next_cyclic = lambda { |num|
   mega_set.select { |el| el.dcomp.first == num.dcomp.last }
-  # [num].product(next_cyclic).flatten.each_slice(current_sequence_length.next).to_a
 }
-def extend_chain(chain_in)
-  chain_out = []
-  chain_in.each do |set_of_sequences|
-    set_of_sequences.each do |sequence|
-      next_cyclic = MS.select { |el| el.dcomp.first == sequence.last.dcomp.last }
-      # next_cyclic.each do |el|
-      # puts "to #{sequence} will be adding #{} "
-      new_sequence = [sequence].product(next_cyclic).flatten.each_slice(3).to_a
-      chain_out.append(new_sequence)
-      # end
-      # [pair].product(get_list_of_next_cyclic.call(pair.last)).flatten.each_slice(3).to_a
-    end
-  end
-  chain_out
-end
 
 def extend_chain_to(chain_in, n)
-  # p "input #{chain_in}"
   chain_out = []
-
   # binding.pry
   chain_in.each do |set_of_sequences|
-    # array_of_sequences = []
     set_of_sequences.each do |sequence|
       next_cyclic = MS.select { |el| el.dcomp.first == sequence.last.dcomp.last }
-      # next_cyclic.each do |el|
-      # puts "to #{sequence} will be adding #{} "
       new_sequence = [sequence].product(next_cyclic).flatten.each_slice(n).to_a
-      # p "extended sequence of #{sequence} is #{new_sequence}"
       chain_out.append new_sequence
-      # p "after appending, size is #{chain_out.size}"
-      # end
-      # [pair].product(get_list_of_next_cyclic.call(pair.last)).flatten.each_slice(3).to_a
     end
-    # chain_out.append array_of_sequences
   end
-  # p chain_out
   chain_out
 end
 
-chain6 = []
 chain2 = []
-chain3 = []
 mega_set.each do |num|
   chain2.append([num].product(get_list_of_next_cyclic.call(num)).flatten.each_slice(2).to_a)
-
-  # chain2.each do |set_of_sequences|
-  #   set_of_sequences.each do |sequence|
-  #     # p sequence.last.dcomp.last
-  #     #     chain3.append([sequence.last].product(get_list_of_next_cyclic.call(sequence.last)).flatten.each_slice(3).to_a)
-  #     #     # [pair].product(get_list_of_next_cyclic.call(pair.last)).flatten.each_slice(3).to_a
-  #   end
-  # end
-  # chain_ext2 = extend_chain(mega_set.map(&:to_a))
-
-  # chain6 = extend_chain_to(chain2, 3)
-  # chain6.append(extend_chain_to(chain3, 4))
-  # chain5 = extend_chain_to(chain4, 5)
-  # chain6 = extend_chain_to(chain5, 6)
 end
-# p chain6
-# p chain2
 puts "size2 #{chain2.size}"
-# p chain2.first
-# p chain2.first.size
 t2 = Time.now
 chain3 = extend_chain_to(chain2, 3)
-# p chain3
 puts "size3 :#{chain3.size}"
-# p chain3.first
-# p chain3.first.size
 t3 = Time.now
 chain4 = extend_chain_to(chain3, 4)
 puts "size4: #{chain4.size}"
-# p chain4.first
-# p chain4.first.size
 t4 = Time.now
 chain5 = extend_chain_to(chain4, 5)
 puts "size5: #{chain5.size}"
-# p chain5.first
-# p chain5.first.size
 t5 = Time.now
 chain6 = extend_chain_to(chain5, 6)
 puts "size6: #{chain6.size}"
-# p chain6.first
-# p chain6.first.size
-# p chain6
 t6 = Time.now
 specials = []
 chain6.each do |set_of_sequences|
   set_of_sequences.each do |sequence|
     eval_arr = [sequence.last, sequence.first]
     eval_arr.append(cyclic?(eval_arr))
-    # p "for #{sequence} we have #{eval_arr}"
     if eval_arr.last # rubocop:disable Style/Next
       tri_num = sequence.intersection(tris).one?
       sq_num = sequence.intersection(sqrs).one?
