@@ -1,14 +1,14 @@
 require_relative "../helpers/helper"
-require 'pry-byebug'
+require "pry-byebug"
 
 str = ""
 str_length = 100
 (1..15).each do |denominator|
   (1..str_length).each do |i|
-    str+=((10.pow(i) / denominator).modulo 10).to_s
+    str += ((10.pow(i) / denominator).modulo 10).to_s
   end
-puts str
-str = ""
+  puts str
+  str = ""
 end
 
 # class Float

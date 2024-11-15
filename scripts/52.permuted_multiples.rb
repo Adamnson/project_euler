@@ -1,16 +1,16 @@
-condition_check = lambda { |num,factor|
-  ret_val = true  
+condition_check = lambda { |num, factor|
+  ret_val = true
   (1..factor).each do |f|
-    ret_val &= (f*num).to_s.chars.sort.eql?(num.to_s.chars.sort)
+    ret_val &= (f * num).to_s.chars.sort.eql?(num.to_s.chars.sort)
   end
   ret_val
 }
 
 (100_000..150_000).each do |number|
-  puts number if condition_check.call(number,6)
+  puts number if condition_check.call(number, 6)
 end
 
-#one
+# one
 # basis = %w[0 1 2 3 4 5 6 7 8 9] * 2
 # p basis
 # number_of_digits = (4..7).to_a # found that only 8 digit numbers have the property that x and 6x have same number of digits
@@ -34,7 +34,7 @@ end
 # number_of_digits.map { |el| find_specials.call(el) }
 # p specials.size
 # p specials
-#two
+# two
 # p((1..6).to_a.map { |el| el * specials.first })
 # (100_000..1_000_000_000).each do |num|
 # (100_000..110_000).each do |num|
@@ -43,4 +43,3 @@ end
 #           .filter
 #   end
 # end
-

@@ -32,9 +32,9 @@ sizes100 = [0, 1, 2]
 sizes50 = (0..4).to_a
 sizes20 = (0..10).to_a
 sizes10 = (0..20).to_a
-sizes5 = (0..40).to_a
-sizes2 = (0..100).to_a
-sizes1 = (0..200).to_a
+(0..40).to_a
+(0..100).to_a
+(0..200).to_a
 t0 = Time.now
 mega_sizes = sizes200.product(sizes100, sizes50, sizes50, sizes10, sizes10, sizes10, sizes20)
 
