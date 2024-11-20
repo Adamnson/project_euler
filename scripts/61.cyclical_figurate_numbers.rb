@@ -41,8 +41,7 @@ p [1224, 1221, 3549, 7238].split_into_two_digit_numbers
 
 puts "#{[4433.dcomp.first, 4433.dcomp.last]}"
 def cyclic?(two_numbers)
-  split_nums = two_numbers.map(&:to_s)
-                          .map { |num_str| [num_str.slice(0, num_str.length / 2), num_str[(num_str.length / 2)..]] }
+  split_nums = two_numbers.split_into_two_digit_numbers
   split_nums.first.last.eql?(split_nums.last.first)
 end
 
@@ -59,7 +58,6 @@ all_cyclic = lambda { |array_of_numbers|
 }
 
 p "set of3 numbers cyclic? #{all_cyclic.call([8128, 2882, 8281])}"
-
 # (1..142).to_a.map(&:triangle).map { |el| p el }
 octs = (1..60).to_a.map(&:octagon)
 sept = (1..65).to_a.map(&:heptagon)
@@ -69,15 +67,18 @@ sqrs = (1..101).to_a.map(&:square)
 tris = (1..142).to_a.map(&:triangle)
 
 mega_set = []
-mega_set.concat(octs, sept, hexs, pent, sqrs, tris)
+mega_set.concat(octs, sept, hexs, pent, sqrs, tris) # .uniq.filter { |num| num.between?(1000, 9999) }
+puts "mega set : #{mega_set.size}"
 mega_set = mega_set.uniq
-mega_set = mega_set.filter { |num| num.between?(1000, 9999) }
+                   .filter { |num| num.between?(1000, 9999) }
 MS = mega_set
 puts "mega set : #{mega_set.size}"
 
 get_list_of_next_cyclic = lambda { |num|
   mega_set.select { |el| el.dcomp.first == num.dcomp.last }
 }
+
+# puts get_list_of_next_cyclic.call(4573)
 
 def extend_chain_to(chain_in, n)
   chain_out = []
@@ -89,17 +90,33 @@ def extend_chain_to(chain_in, n)
       chain_out.append new_sequence
     end
   end
-  chain_out
+  chain_out.reject!(&:empty?)
 end
 
 chain2 = []
 mega_set.each do |num|
   chain2.append([num].product(get_list_of_next_cyclic.call(num)).flatten.each_slice(2).to_a)
+  chain2.reject!(&:empty?)
 end
+# p chain2
 puts "size2 #{chain2.size}"
 t2 = Time.now
 chain3 = extend_chain_to(chain2, 3)
+# p chain3
 puts "size3 :#{chain3.size}"
+
+# chain2.each do |set_of_sequences|
+#   set_of_sequences.each do |seq|
+#     p seq if seq.first == 2625
+#   end
+# end
+
+# chain3.each do |set_of_sequences|
+#   set_of_sequences.each do |seq|
+#     p seq if seq.first == 2625
+#   end
+# end
+
 t3 = Time.now
 chain4 = extend_chain_to(chain3, 4)
 puts "size4: #{chain4.size}"
@@ -113,31 +130,37 @@ t6 = Time.now
 specials = []
 chain6.each do |set_of_sequences|
   set_of_sequences.each do |sequence|
-    specials.append(sequence) if all_cyclic.call(sequence)
+    # specials.append(sequence) if all_cyclic.call(sequence)
+    specials.append(sequence) if cyclic?([sequence.last, sequence.first])
   end
 end
+
 t_filt = Time.now
-p specials
+# p specials
 p specials.size
 
 specials.each do |sq|
-  tri_num = sq.intersection(tris)
-  sq_num = sq.intersection(sqrs)
-  pent_num = sq.intersection(pent)
-  hex_num = sq.intersection(hexs)
-  sept_num = sq.intersection(sept)
-  oct_num = sq.intersection(octs)
-  presence_condition = tri_num.one? && sq_num.one? && pent_num.one? && hex_num.one? && sept_num.one? && oct_num.one?
+  tri_num = sq.intersection(tris).size
+  sq_num = sq.intersection(sqrs).size
+  pent_num = sq.intersection(pent).size
+  hex_num = sq.intersection(hexs).size
+  sept_num = sq.intersection(sept).size
+  oct_num = sq.intersection(octs).size
+  # puts "#{tri_num}   #{sq_num}   #{pent_num}   #{hex_num}   #{sept_num}   #{oct_num} "
+  presence_condition = [tri_num, sq_num, pent_num, hex_num, sept_num, oct_num]
+  # puts presence_condition
   # unique_condition = (sequence.count(tri_num) == 1) && (sequence.count(sq_num) == 1) && (sequence.count(pent_num) == 1) && (sequence.count(hex_num) == 1) && (sequence.count(sept_num) == 1) && (sequence.count(oct_num) == 1)
 
-  puts "found #{sq}" if presence_condition # && unique_condition
+  # && unique_condition
+  puts " #{sq.inject(:+)} found #{sq} with #{presence_condition}" if presence_condition.map(&:positive?).all?
 end
+# answer is 28684 found [1281, 8128, 2882, 8256, 5625, 2512] with [2, 1, 1, 1, 1, 1]
 
-puts "extending 2 to 3 : #{t3 - t2}"
-puts "extending 3 to 4 : #{t4 - t3}"
-puts "extending 4 to 5 : #{t5 - t4}"
-puts "extending 5 to 6 : #{t6 - t5}"
-puts "finding sets : #{t_filt - t6}"
+# puts "extending 2 to 3 : #{t3 - t2}"
+# puts "extending 3 to 4 : #{t4 - t3}"
+# puts "extending 4 to 5 : #{t5 - t4}"
+# puts "extending 5 to 6 : #{t6 - t5}"
+# puts "finding sets : #{t_filt - t6}"
 # arr = [5151, 5151, 5151, 5192, 9216, 1651]
 
 # puts "3 #{arr.intersection(tris)}"
@@ -174,3 +197,17 @@ puts "finding sets : #{t_filt - t6}"
 # extending 4 to 5 : 4.406571893
 # extending 5 to 6 : 18.817721291
 # finding sets : 1.123641837
+
+# rejecting the empty sequences
+# mega set : 299
+# size2 255
+# size3 :747
+# size4: 2255
+# size5: 6731
+# size6: 20175
+# 850
+# extending 2 to 3 : 0.488829801
+# extending 3 to 4 : 1.563354262
+# extending 4 to 5 : 4.504854171
+# extending 5 to 6 : 12.827119268
+# finding sets : 0.417175417
