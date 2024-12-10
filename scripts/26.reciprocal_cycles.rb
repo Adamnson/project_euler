@@ -2,14 +2,52 @@ require_relative "../helpers/helper"
 require "pry-byebug"
 
 str = ""
+reciprocal_hash = {}
 str_length = 100
-(1..15).each do |denominator|
+(1..20).each do |denominator|
   (1..str_length).each do |i|
     str += ((10.pow(i) / denominator).modulo 10).to_s
   end
   puts str
+  reciprocal_hash[denominator] = [str]
   str = ""
 end
+
+reciprocal_hash.each do |key, value| # key is a number and value is an array of the reciprocal
+  occurances = []
+  value.first.chars.each_with_index do |digit, idx|
+    occurances.append(value.first[idx + 1..].index(digit))
+  end
+  reciprocal_hash[key].append(occurances)
+  offset = 0
+  offset_check = 0
+  offset_digits = ""
+  pattern = ""
+  occurances.each_with_index do |occ, idx|
+    offset_check = occurances.index(occurances.compact.first)
+    second_offset = occurances.index(occurances.compact[1])
+    nil_idx = occurances.index(nil)
+    offset_check = second_offset unless offset_check > nil_idx
+    # longer_pattern = occurances.compact.uniq.max
+    if idx < offset_check
+      offset += 1
+      offset_digits += value.first[idx]
+    end
+
+    pattern = value.first.slice(offset, occurances[offset_check] + 1)
+  end
+  reciprocal_hash[key].append([offset, offset_check, offset_digits])
+  reciprocal_hash[key].append([occurances[offset_check], pattern])
+end
+
+p reciprocal_hash
+
+reciprocal_hash.each do |key, value|
+  p "#{key} : #{value[0]}"
+  p "#{value}" if key == 17
+  p "#{key} : #{value[2].last}(#{value[3].last})"
+end
+# pattern starts from first digit or pattern starts after an offset
 
 # class Float
 #   def pow(n)
