@@ -8,7 +8,7 @@ str_length = 100
   (1..str_length).each do |i|
     str += ((10.pow(i) / denominator).modulo 10).to_s
   end
-  puts str
+  # puts str
   reciprocal_hash[denominator] = [str]
   str = ""
 end
@@ -20,33 +20,35 @@ reciprocal_hash.each do |key, value| # key is a number and value is an array of 
   end
   reciprocal_hash[key].append(occurances)
   offset = 0
-  offset_check = 0
+  offset_end_idx_hyp = 0 # this is the hypothesized length of the offset characteres
   offset_digits = ""
   pattern = ""
   occurances.each_with_index do |occ, idx|
-    offset_check = occurances.index(occurances.compact.first)
+    offset_end_idx_hyp = occurances.index(occurances.compact.first)
     second_offset = occurances.index(occurances.compact[1])
-    nil_idx = occurances.index(nil)
-    offset_check = second_offset unless offset_check > nil_idx
-    # longer_pattern = occurances.compact.uniq.max
-    if idx < offset_check
+    # to prevent "stray" nil from the end of the occurances array from getting captured, we have
+    nil_idx = [occurances.index(nil), occurances.length / 2].min # the min condition is a guard
+    offset_end_idx_hyp = second_offset if offset_end_idx_hyp > nil_idx
+    if idx < offset_end_idx_hyp
       offset += 1
       offset_digits += value.first[idx]
     end
 
-    pattern = value.first.slice(offset, occurances[offset_check] + 1)
+    pattern = value.first.slice(offset, occurances[offset_end_idx_hyp] + 1)
   end
-  reciprocal_hash[key].append([offset, offset_check, offset_digits])
-  reciprocal_hash[key].append([occurances[offset_check], pattern])
+  reciprocal_hash[key].append([offset, offset_end_idx_hyp, offset_digits])
+  reciprocal_hash[key].append([occurances[offset_end_idx_hyp], pattern])
 end
 
 p reciprocal_hash
 
 reciprocal_hash.each do |key, value|
-  p "#{key} : #{value[0]}"
-  p "#{value}" if key == 17
-  p "#{key} : #{value[2].last}(#{value[3].last})"
+  # p "#{key} : #{value[0]}"
+  # p "#{value}" # if key == 17
+  # p "#{key} : #{value[2].last}(#{value[3].last})"
+  p "#{key} : [#{value.last.first}]: 0.#{value[2].last}#{value.last.last.eql?('0') ? '' : "(#{value.last.last})"}"
 end
+
 # pattern starts from first digit or pattern starts after an offset
 
 # class Float
