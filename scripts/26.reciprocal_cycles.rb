@@ -4,7 +4,7 @@ require "pry-byebug"
 str = ""
 reciprocal_hash = {}
 str_length = 100
-(1..20).each do |denominator|
+(101..102).each do |denominator|
   (1..str_length).each do |i|
     str += ((10.pow(i) / denominator).modulo 10).to_s
   end
@@ -14,21 +14,26 @@ str_length = 100
 end
 
 reciprocal_hash.each do |key, value| # key is a number and value is an array of the reciprocal
+  # occurances array iterates over the reciprocal-string and
+  # captures the next occurance of the current character
   occurances = []
-  value.first.chars.each_with_index do |digit, idx|
-    occurances.append(value.first[idx + 1..].index(digit))
-  end
-  reciprocal_hash[key].append(occurances)
   offset = 0
   offset_end_idx_hyp = 0 # this is the hypothesized length of the offset characteres
   offset_digits = ""
   pattern = ""
+
+  value.first.chars.each_with_index do |digit, idx|
+    occurances.append(value.first[idx + 1..].index(digit))
+  end
+  reciprocal_hash[key].append(occurances)
+
   occurances.each_with_index do |occ, idx|
     offset_end_idx_hyp = occurances.index(occurances.compact.first)
-    second_offset = occurances.index(occurances.compact[1])
+    offset_end_second_hyp = occurances.index(occurances.compact[1])
     # to prevent "stray" nil from the end of the occurances array from getting captured, we have
     nil_idx = [occurances.index(nil), occurances.length / 2].min # the min condition is a guard
-    offset_end_idx_hyp = second_offset if offset_end_idx_hyp > nil_idx
+    offset_end_idx_hyp = offset_end_second_hyp if (offset_end_idx_hyp > nil_idx) && (offset_end_second_hyp < nil_idx)
+
     if idx < offset_end_idx_hyp
       offset += 1
       offset_digits += value.first[idx]
@@ -41,13 +46,42 @@ reciprocal_hash.each do |key, value| # key is a number and value is an array of 
 end
 
 p reciprocal_hash
-
+key_and_max = [0, 0]
 reciprocal_hash.each do |key, value|
   # p "#{key} : #{value[0]}"
   # p "#{value}" # if key == 17
   # p "#{key} : #{value[2].last}(#{value[3].last})"
   p "#{key} : [#{value.last.first}]: 0.#{value[2].last}#{value.last.last.eql?('0') ? '' : "(#{value.last.last})"}"
+
+  if key_and_max.last < value.last.first
+    key_and_max[0] = key
+    key_and_max[-1] = value.last.first
+  end
 end
+puts "max: #{key_and_max}"
+ignore_list = []
+reciprocal_hash.each do |key, value|
+  occurances = value[1]
+  #
+  #   offset_end_idx_hyp = occurances.index(occurances.compact.first)
+  #   offset_end_second_hyp = occurances.index(occurances.compact[1])
+  #   p "first and second hypothesis :#{offset_end_idx_hyp}, #{offset_end_second_hyp}"
+  #
+  next unless !occurances.first.nil? && occurances[1].nil?
+
+  #
+  # p key
+  ignore_list.append(key)
+end
+p ignore_list
+#   puts "how first hyp is deduced: \nStep1: #{occurances.compact.first}, #{occurances.compact[1]} \nstep2: #{offset_end_idx_hyp}, #{offset_end_second_hyp}"
+#   offset_end_idx_hyp = occurances.index(occurances.compact.first)
+#   offset_end_second_hyp = occurances.index(occurances.compact[1])
+#   p "first and second hypothesis :#{offset_end_idx_hyp}, #{offset_end_second_hyp}"
+#   nil_idx = [occurances.index(nil), occurances.length / 2].min # the min condition is a guard
+#   offset_end_idx_hyp = offset_end_second_hyp if (offset_end_idx_hyp > nil_idx) && (offset_end_second_hyp < nil_idx)
+#   p "first and second hypothesis :#{offset_end_idx_hyp}, #{offset_end_second_hyp}"
+# end
 
 # pattern starts from first digit or pattern starts after an offset
 
