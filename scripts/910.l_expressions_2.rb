@@ -24,22 +24,30 @@ def S(u, v, w)
   v + "(" + u + "(" + v + ")" + "(" + w + ")" + ")"
 end
 
+def apply_s(exp)
+  # regex : /S(\(.{1,}\)){3}/g
+  puts "Transform S"
+  pattern = /S(\(.{1,}\)){3}/.match exp
+  pattern_start_idx = exp.index(pattern.to_s)
+  # puts exp.scan(/S(\(.{1,}\)){3}/pattern)
+  l_exp = exp.split(")(")
+  puts l_exp.inspect
+  puts "calling s function on #{pattern} at #{pattern_start_idx}"
+  last_idx_correction = l_exp.size == 3 ? -2 : -1
+  u = l_exp.first[2..]
+  v = l_exp[1]
+  w = l_exp[2][..last_idx_correction]
+  coloured_u = Rainbow(u).color(:forestgreen)
+  coloured_v = Rainbow(v).color(:orangered)
+  coloured_w = Rainbow(w).color(:darkorange)
+  puts("u: #{coloured_u}\nv: #{coloured_v}\nw: #{coloured_w}")
+  puts "#{S(coloured_u, coloured_v, coloured_w)}(#{l_exp[3..].join(')(')}"
+  "#{S(u, v, w)}(#{l_exp[3..].join(')(')}"
+end
 exp1 = "S(Z)(A)(0)"
 def evaluateExpression(exp)
   if /^S(\(.{1,}\)){3}/.match exp
-    # regex : /S(\(.{2,}\)){3}/g
-    pattern = /S(\(.{1,}\)){3}/.match exp
-    pattern_start_idx = exp.index(pattern.to_s)
-    # puts exp.scan(/S(\(.{1,}\)){3}/pattern)
-    l_exp = exp.split(")(")
-
-    puts "calling s function #{pattern} at #{pattern_start_idx}"
-    last_idx_correction = l_exp.size == 3 ? -2 : -1
-    u = l_exp.first[2..]
-    v = l_exp[1]
-    w = l_exp[2][..last_idx_correction]
-    puts Rainbow("u: #{u}\nv: #{v}\nw: #{w}").color(:tomato)
-    S(u, v, w) + "(" + l_exp[3..].join(")(")
+    apply_s exp
   elsif /^Z(\(.{1,}\)){2}/.match exp
     # regex : /Z(\(.{1,}\)){2}/g
     l_exp = exp.split(")(")
@@ -48,41 +56,45 @@ def evaluateExpression(exp)
     u = l_exp.first[2..]
     v = l_exp[1][..last_idx_correction]
     puts "u: #{u}\nv: #{v}"
-    Z(u, v) + "(" + l_exp[2..].join(")(")
+    "#{Z(u, v)}(#{l_exp[2..].join(')(')}"
   elsif exp.start_with? "A"
     # regex : /A(\(.\)){1}/g
     puts "calling a function"
     puts A(exp[2..-2])
   end
 end
+apply_s exp1
 
 # #check this
-# out = []
-# eqn = 'S(S)(S(S))(S(Z))(A)(O)'
-#
-# out.append(evaluateExpression(eqn))
-# puts out.last
-# 5.times do
+out = []
+eqn = "S(S)(S(S))(S(Z))(A)(O)"
+out.append(eqn)
+apply_s eqn
+
+out.append(evaluateExpression(eqn))
+puts "Iteration 1 => #{out.last}"
+# 4.times do |itr|
 #   out.append(evaluateExpression(out.last))
-#   puts out.last
+#   puts "Iteration #{itr} => #{out.last}"
 # end
-# puts out
+out.append(apply_s(out.last))
+puts out
 
 # works
-exp2 = evaluateExpression(exp1)
-puts exp2
-exp3 = evaluateExpression(exp2)
-puts exp3
+# exp2 = evaluateExpression(exp1)
+# puts exp2
+# exp3 = evaluateExpression(exp2)
+# puts exp3
 
 # Migration plan
-# 1. Copy code
+# X. Copy code
 # 2. Make tests
-# 3. colourize print for illustration
+# 3*. colourize print for illustration
 # puts exp1.split(/S(\(.{1,}\)){3}/)
 # puts "splitting"
 # p exp1.split(/S((.{1,})(.{1,})(.{1,}))/)
 # puts /^S(\(.{1,}\)){3}/.match('S(S)(S(S))(S(Z))').to_s.split(")(")
-puts(/^S(\(.{1,}\)){3}/.match("S(S)(S(S))(S(Z))").to_s.split(")("))
+# puts(/^S(\(.{1,}\)){3}/.match("S(S)(S(S))(S(Z))").to_s.split(")("))
 # p (/S\((.{1,})\){3}/.match 'S(S)(S(S))(S(Z))')
 # puts exp1.split(/S(\(.{1,}\)\-1\(.{1,}\)\-2\(.{1,}\)\-3)/)
 # puts /^S(\(.{1,}\)){3}/.match('S(S)(S(S))(S(Z))').to_s.split(")(")
