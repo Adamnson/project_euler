@@ -21,7 +21,7 @@ class L_Exp
       next unless sub_pattern.count("(") != sub_pattern.count(")")
 
       puts "editing #{sub_pattern} and #{l_exp[idx + 1]}"
-      l_exp[idx] += l_exp[idx + 1]
+      l_exp[idx] += "#{l_exp[idx + 1]}"
       l_exp[idx + 1] = ""
     end
     l_exp.reject! { |el| el.eql?("") }
@@ -42,6 +42,40 @@ class L_Exp
     "#{S(u, v, w)}#{l_exp.size == 3 ? '' : "(#{l_exp[3..].join(')(')}"}"
   end
 
+  def compute
+    if @value.start_with?("A(")
+      identify_params(1)
+    elsif @value.start_with?("Z(")
+      identify_params(2)
+    elsif @value.start_with?("S(")
+      identify_params
+    end
+  end
+
+  def identify_params(num = 3)
+    number_of_open_brackets = 0
+    skip_1_char = false
+    buffer = ""
+    params = []
+    @value.chars.each_with_index do |ch, idx|
+      number_of_open_brackets += 1 if ch == "("
+      number_of_open_brackets -= 1 if ch == ")"
+      if number_of_open_brackets.zero? and idx.positive?
+        params.append(buffer)
+        return params if params.size == num
+
+        buffer = ""
+        skip_1_char = true
+        next
+      end
+      if skip_1_char
+        skip_1_char = false
+        next
+      end
+      buffer += ch if idx > 1
+    end
+  end
+
   private
 
   def Z(u, v)
@@ -53,18 +87,36 @@ class L_Exp
   end
 end
 
-sza0 = L_Exp.new("S(Z)(A)(0)")
+test_1 = L_Exp.new("A(S(Z)(A)(0))")
+p "test 1"
+puts test_1.compute
 
-puts sza0.value
+test_2 = L_Exp.new("Z(1)(1)")
+p "test 2"
+puts test_2.compute
 
-puts "using return value #{sza0.apply_s}"
+test_3 = L_Exp.new("S(Z)(A)(0)")
+p "test 3"
+puts test_3.compute
 
-puts sza0.value
+test_4 = L_Exp.new("S(S)(S(S))(S(Z))(A)(O)")
+p "test 4"
+puts test_4.compute
 
-s5za0 = L_Exp.new "S(S)(S(S))(S(Z))(A)(O)"
-
-after_step_1 = L_Exp.new(s5za0.apply_s)
-puts "using return value #{after_step_1.value}"
-
-after_step_2 = L_Exp.new(after_step_1.apply_s)
-puts "using return value #{after_step_2.value}"
+# sza0 = L_Exp.new("S(Z)(A)(0)")
+#
+# puts sza0.value
+#
+# puts "using return value #{sza0.apply_s}"
+#
+# puts sza0.value
+# s5za0 = L_Exp.new "S(S)(S(S))(S(Z))(A)(O)"
+#
+# after_step_1 = L_Exp.new(s5za0.apply_s)
+# puts "using return value #{after_step_1.value}"
+#
+# after_step_2 = L_Exp.new(after_step_1.apply_s)
+# puts "using return value #{after_step_2.value}"
+#
+# after_step_3 = L_Exp.new(after_step_2.apply_s)
+# puts "using return value #{after_step_3.value}"
