@@ -86,7 +86,7 @@ class L_Exp
     v + "(" + u + "(" + v + ")" + "(" + w + ")" + ")"
   end
 end
-
+=begin
 test_1 = L_Exp.new("A(S(Z)(A)(0))")
 p "test 1"
 puts test_1.compute
@@ -94,15 +94,15 @@ puts test_1.compute
 test_2 = L_Exp.new("Z(1)(1)")
 p "test 2"
 puts test_2.compute
-
+=end
 test_3 = L_Exp.new("S(Z)(A)(0)")
 p "test 3"
 puts test_3.compute
-
+=begin
 test_4 = L_Exp.new("S(S)(S(S))(S(Z))(A)(O)")
 p "test 4"
 puts test_4.compute
-
+=end
 # sza0 = L_Exp.new("S(Z)(A)(0)")
 #
 # puts sza0.value

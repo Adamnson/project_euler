@@ -32,11 +32,37 @@ class Node
   end
 end
 
-n1 = Node.new(5)
-n1.show
+class Expression
+  @value = ""
+  def initialize(exp)
+    @value = exp
+  end
+  
+  def identify_params(num = 3)
+    number_of_open_brackets = 0
+    skip_1_char = false
+    buffer = ""
+    params = []
+    @value.chars.each_with_index do |ch, idx|
+      number_of_open_brackets += 1 if ch == '('
+      number_of_open_brackets -= 1 if ch == ')'
+      if number_of_open_brackets.zero? and idx.positive?
+        params.append(buffer)
+        return params if params.size == num
 
-n2 = Node.new("S", 0)
-n2.show
+        buffer = ""
+        skip_1_char = true
+        next
+      end
+      if skip_1_char 
+        skip_1_char = false
+        next
+      end
+      buffer += ch if idx > 1
+    end
+  end
+end
 
-n3 = Node.new("Z","A","0")
-n3.show
+
+sza0 = Expression.new("S(Z)(A)(0)")
+puts sza0.identify_params
