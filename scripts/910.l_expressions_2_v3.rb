@@ -1,3 +1,8 @@
+# class Node
+#  @operator : Classifies the operation to be performed A/Z/S
+#  @params : hash that contains {u,v,w depending on operator}
+#  #initialize : initializes a node with n parameters and correct operator
+#  #transform : applies the transfomation as per the operator
 class Node
   attr_accessor :operator, :params
 
@@ -22,11 +27,10 @@ class Node
   def transform
     case @operator
     when "S"
-      {:new_expression=>"#{@params[:v]}(#{params[:u]}(#{params[:v]})(#{params[:w]}))",
+      {:new_expression=>"#{@params[:v]}(#{@params[:u]}(#{@params[:v]})(#{params[:w]}))",
       :to_queue=>false}
     when "A"
       if (@params[:u][0].ord >= 48) && (@params[:u][0].ord <= 57)
-        (@params[:u]).to_i + 1
         {:new_expression=>((@params[:u]).to_i + 1), :to_queue=>false}
       else
         puts "creating a new expression for #{@params[:u]}"
@@ -64,7 +68,7 @@ class Expression
 
   def initialize(exp, operator_to_enqueue = nil)
 
-    puts "to initialize with #{exp} and #{operator_to_enqueue}"
+    puts "to initialize with #{exp} #{"and #{operator_to_enqueue}" unless operator_to_enqueue.nil?}"
     @value = exp
     @queue = []
     @queue.push(operator_to_enqueue) unless (operator_to_enqueue.nil? || operator_to_enqueue.empty?)
@@ -92,6 +96,9 @@ class Expression
     when "S"
       @identified_operator = "S"
       @required_params = 3
+    else
+      @identified_operator = ""
+      @required_params = 0
     end
   end
 
@@ -106,6 +113,7 @@ class Expression
       if number_of_open_brackets.zero? && idx.positive?
         params.append(buffer)
         return params if params.size == @required_params
+        #check if it is a number and break the  format loop
 
         buffer = ""
         skip_1_char = true
@@ -133,13 +141,7 @@ class Expression
     end
     initialize(recveived_from_tranform[:new_expression], *@queue)
     puts "printing from format  #{@value}"
-    if @value.ord >= 48 && @value.ord <=57
-      @solved_internal_expression = true
-      update_value
-      puts "solved"
-      print_deets
-    end
-
+    
     def update_value
       initialize("#{@queue.last}(#{@value})", @queue.slice(..-2))
     end
@@ -153,23 +155,36 @@ class Expression
     puts("===>reqd params #{@required_params}")
     puts("===>operations in queue #{@queue}")
   end
+
+  def solve
+    format
+   if ((@value.ord >= 48 && @value.ord <=57) || (@value.ord >= 0 && @value.ord <=9) )
+      @solved_internal_expression = true
+      update_value
+      puts "solved"
+      print_deets
+    end
+  end
 end
 
 sza0 = Expression.new("S(Z)(A)(0)")
-p "params"
-puts sza0.identify_params
-puts "format 1"
-sza0.format
-puts "value check"
-puts sza0.value
-puts "identifying again"
-puts sza0.identify_params
-puts "formating A expression"
-sza0.format
-puts "processing Z expression"
-sza0.format
-puts "for the last time"
-sza0.format
+3.times do 
+  sza0.solve 
+end
+# puts "format 1"
+# sza0.format
+# puts "value check"
+# puts sza0.value
+# puts "identifying again"
+# puts sza0.identify_params
+# puts "formating A expression"
+# sza0.format
+# puts "processing Z expression"
+# sza0.format
+# puts "for the last time"
+# sza0.format
+
+
 # p "printing nodes"
 # puts sza0.node
 # p "node params"
