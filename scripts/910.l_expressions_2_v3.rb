@@ -112,7 +112,9 @@ class Expression
       number_of_open_brackets -= 1 if ch == ")"
       if number_of_open_brackets.zero? && idx.positive?
         params.append(buffer)
+        puts "currently: #{params} marked at #{@required_params}"
         return params if params.size == @required_params
+
         #check if it is a number and break the  format loop
 
         buffer = ""
@@ -128,25 +130,33 @@ class Expression
   end
 
   def format
-    @node = Node.new(*identify_params)
-    recveived_from_tranform = @node.transform
-    puts "received from transform #{recveived_from_tranform}"
-    if (recveived_from_tranform[:to_queue] )
-      puts "this should be true #{recveived_from_tranform[:to_queue]}"
-      if (@queue.empty?) 
-        @queue = recveived_from_tranform[:for_queue]
-      else
-        @queue.push(recveived_from_tranform[:for_queue])
+    if !@this_is_the_end
+      @node = Node.new(*identify_params)
+      recveived_from_tranform = @node.transform
+      puts "received from transform #{recveived_from_tranform}"
+      if (recveived_from_tranform[:to_queue] )
+        puts "this should be true #{recveived_from_tranform[:to_queue]}"
+        if (@queue.empty?) 
+          @queue = recveived_from_tranform[:for_queue]
+        else
+          @queue.push(recveived_from_tranform[:for_queue])
+        end
       end
-    end
-    initialize(recveived_from_tranform[:new_expression], *@queue)
-    puts "printing from format  #{@value}"
-    
-    def update_value
-      initialize("#{@queue.last}(#{@value})", @queue.slice(..-2))
+      initialize(recveived_from_tranform[:new_expression], *@queue)
+      puts "printing from format  #{@value}"
+      if (@value.to_i.eql?(@value.to_i) && @queue.empty?)
+        puts "this is the end"
+        puts `echo "-->End<--}%{" >> 910_exp.txt`
+        @this_is_the_end = true
+        return
+      end
     end
   end
 
+  def update_value
+    initialize("#{@queue.last}(#{@value})", @queue.slice(..-2))
+  end
+    
   def print_deets
     puts "Here's what I know"
     puts("===>Value #{@value}")
@@ -167,10 +177,13 @@ class Expression
   end
 end
 
-sza0 = Expression.new("S(Z)(A)(0)")
-3.times do 
-  sza0.solve 
-end
+# sza0 = Expression.new("S(Z)(A)(0)")
+# 3.times do 
+#   sza0.solve 
+# end
+
+azz0 = Expression.new("A(Z(Z)(0))")
+3.times do azz0.solve end
 # puts "format 1"
 # sza0.format
 # puts "value check"
