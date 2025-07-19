@@ -49,29 +49,46 @@ describe Node do
         expect(output_hash).to eql({ new_expression: exp, to_queue: true, for_queue: "A" })
       end
     end
+  end
 
-    describe "check transformation for Z operator" do
-      it "returns the second parameter, to queue flag is false" do
-        n = Node.new("A", "0")
-        output_hash = n.transform
-        expect(n.operator).to eql("Z")
-        expect(output_hash).to have_key(:new_expression)
-        expect(output_hash).to have_key(:to_queue)
-        expect(output_hash[:new_expression]).to eql("0")
-        expect(output_hash[:to_queue]).to be false
-      end
+  describe "check transformation for Z operator" do
+    it "returns the second parameter, to queue flag is false" do
+      n = Node.new("A", "0")
+      output_hash = n.transform
+      expect(n.operator).to eql("Z")
+      expect(output_hash).to have_key(:new_expression)
+      expect(output_hash).to have_key(:to_queue)
+      expect(output_hash[:new_expression]).to eql("0")
+      expect(output_hash[:to_queue]).to be false
+    end
+  end
+
+  describe "check transformation for S operator" do
+    it "returns the S-transformed expression, to queue flag is false" do
+      n = Node.new("Z", "A", "0")
+      output_hash = n.transform
+      expect(n.operator).to eql("S")
+      expect(output_hash).to have_key(:new_expression)
+      expect(output_hash).to have_key(:to_queue)
+      expect(output_hash[:new_expression]).to eql("A(Z(A)(0))")
+      expect(output_hash[:to_queue]).to be false
+    end
+  end
+
+  describe "shows output in the correct format" do
+    it "prints a node of type A as A(u)" do
+      n = Node.new("1")
+      expect { n.show }.to output("A(1)\n").to_stdout
     end
 
-    describe "check transformation for S operator" do
-      it "returns the S-transformed expression, to queue flag is false" do
-        n = Node.new("Z", "A", "0")
-        output_hash = n.transform
-        expect(n.operator).to eql("S")
-        expect(output_hash).to have_key(:new_expression)
-        expect(output_hash).to have_key(:to_queue)
-        expect(output_hash[:new_expression]).to eql("A(Z(A)(0))")
-        expect(output_hash[:to_queue]).to be false
-      end
+    it "prints a node of type A as Z(u)(v)" do
+      n = Node.new("1", "10")
+      expect { n.show }.to output("Z(1)(10)\n").to_stdout
+    end
+
+    it "prints a node of type S as S(u)(v)(w)" do
+      n = Node.new("Z", "A", "0")
+      expect { n.show }.to output("S(Z)(A)(0)\n").to_stdout
     end
   end
 end
