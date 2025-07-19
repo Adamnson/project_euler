@@ -35,7 +35,7 @@ class Node
       { new_expression: "#{@params[:v]}(#{@params[:u]}(#{@params[:v]})(#{params[:w]}))",
         to_queue: false }
     when "A"
-      if (@params[:u].ord >= 48) && (@params[:u].ord <= 57)
+      if @params[:u].ord.between?(48, 57)
         { new_expression: ((@params[:u]).to_i + 1), to_queue: false }
       else
         puts "creating a new expression for #{@params[:u]}"
@@ -172,7 +172,7 @@ class Expression
   end
 
   def value_is_a_number?
-    (@value.ord >= 48 && @value.ord <= 57) || (@value.ord > 0 && @value.ord <= 9)
+    @value.ord.between?(48, 57) || @value.ord.between?(0, 9)
   end
 
   def add_to_queue(node_transform_hash)
@@ -192,7 +192,6 @@ class Expression
                      else
                        (node_transform_hash[:new_expression]).to_s + @tail
                      end
-    # initialize(node_transform_hash[:new_expression], *@queue)
     initialize(value_for_init, *@queue)
   end
 
