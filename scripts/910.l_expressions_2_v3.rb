@@ -82,7 +82,7 @@ end
 # #solve
 #
 class Expression
-  attr_accessor :node, :value, :queue
+  attr_accessor :node, :value, :queue, :tail
 
   @value = ""
   @node = nil
@@ -144,9 +144,7 @@ class Expression
           puts "i think the tail is #{@tail} from #{idx + 1} onwards" unless @tail.empty?
           return params
         end
-
         # check if it is a number and break the  format loop
-
         buffer = ""
         skip_1_char = true
         next
@@ -163,32 +161,42 @@ class Expression
     return if @this_is_the_end
 
     @node = Node.new(*identify_params)
-    recveived_from_tranform = @node.transform
-    puts "received from transform #{recveived_from_tranform}"
-    if recveived_from_tranform[:to_queue]
-      puts "this should be true #{recveived_from_tranform[:to_queue]}"
-      if @queue.empty?
-        @queue = recveived_from_tranform[:for_queue]
-      else
-        @queue.push(recveived_from_tranform[:for_queue])
-      end
-    end
-    value_for_init = if @tail.empty?
-                       recveived_from_tranform[:new_expression]
-                     else
-                       (recveived_from_tranform[:new_expression]).to_s + @tail
-                     end
-    # initialize(recveived_from_tranform[:new_expression], *@queue)
-    initialize(value_for_init, *@queue)
-    puts "printing from format  #{@value}"
+    tranform_retval = @node.transform
+    add_to_queue(tranform_retval)
+    update_value(tranform_retval)
     return unless @value.to_i.eql?(@value.to_i) && @queue.empty?
-    return unless (@value.ord >= 48 && @value.ord <= 57) || (@value.ord > 0 && @value.ord <= 9)
+    return unless value_is_a_number?
 
     @this_is_the_end = true
     puts "the value has been identified as #{@value}"
   end
 
-  def update_value
+  def value_is_a_number?
+    (@value.ord >= 48 && @value.ord <= 57) || (@value.ord > 0 && @value.ord <= 9)
+  end
+
+  def add_to_queue(node_transform_hash)
+    return unless node_transform_hash[:to_queue]
+
+    puts "this should be true #{node_transform_hash[:to_queue]}"
+    if @queue.empty?
+      @queue = node_transform_hash[:for_queue]
+    else
+      @queue.push(node_transform_hash[:for_queue])
+    end
+  end
+
+  def update_value(node_transform_hash)
+    value_for_init = if @tail.empty?
+                       node_transform_hash[:new_expression]
+                     else
+                       (node_transform_hash[:new_expression]).to_s + @tail
+                     end
+    # initialize(node_transform_hash[:new_expression], *@queue)
+    initialize(value_for_init, *@queue)
+  end
+
+  def push_from_queue
     initialize("#{@queue.last}(#{@value})", @queue.slice(..-2))
   end
 
@@ -203,10 +211,10 @@ class Expression
 
   def solve
     format
-    return unless (@value.ord >= 48 && @value.ord <= 57) || (@value.ord > 0 && @value.ord <= 9)
+    return unless value_is_a_number?
 
     @solved_internal_expression = true
-    update_value
+    push_from_queue
     puts "solved"
     print_deets
   end
