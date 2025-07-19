@@ -42,10 +42,35 @@ describe Node do
       test_expressions.each do |exp|
         n = Node.new(exp)
         output_hash = n.transform
+        expect(n.operator).to eql("A")
         expect(output_hash).to have_key(:new_expression)
         expect(output_hash).to have_key(:to_queue)
         expect(output_hash).to have_key(:for_queue)
         expect(output_hash).to eql({ new_expression: exp, to_queue: true, for_queue: "A" })
+      end
+    end
+
+    describe "check transformation for Z operator" do
+      it "returns the second parameter, to queue flag is false" do
+        n = Node.new("A", "0")
+        output_hash = n.transform
+        expect(n.operator).to eql("Z")
+        expect(output_hash).to have_key(:new_expression)
+        expect(output_hash).to have_key(:to_queue)
+        expect(output_hash[:new_expression]).to eql("0")
+        expect(output_hash[:to_queue]).to be false
+      end
+    end
+
+    describe "check transformation for S operator" do
+      it "returns the S-transformed expression, to queue flag is false" do
+        n = Node.new("Z", "A", "0")
+        output_hash = n.transform
+        expect(n.operator).to eql("S")
+        expect(output_hash).to have_key(:new_expression)
+        expect(output_hash).to have_key(:to_queue)
+        expect(output_hash[:new_expression]).to eql("A(Z(A)(0))")
+        expect(output_hash[:to_queue]).to be false
       end
     end
   end
