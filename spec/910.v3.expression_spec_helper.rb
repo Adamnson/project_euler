@@ -24,7 +24,7 @@ describe Expression do
       expect(e.value).to eql("A(0)")
       expect(e.queue).to be_empty
       expect(e.tail).to be_empty
-      expect { e.format }.to change(e, :value).from("A(0)").to(1)
+      expect { e.format }.to change(e, :value).from("A(0)").to("1")
     end
   end
 end
