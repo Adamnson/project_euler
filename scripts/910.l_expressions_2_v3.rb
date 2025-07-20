@@ -32,6 +32,7 @@ class Node
   def transform
     case @operator
     when "S"
+      puts "#{@params[:v]}-of-(#{@params[:u]}-(#{@params[:v]})-(#{params[:w]}))"
       { new_expression: "#{@params[:v]}(#{@params[:u]}(#{@params[:v]})(#{params[:w]}))",
         to_queue: false }
     when "A"
@@ -96,15 +97,15 @@ class Expression
     puts "to initialize with #{exp} #{"and #{operator_to_enqueue}" unless operator_to_enqueue.nil?}"
     @value = exp
     @queue = []
-    @tail = ""
     @queue.push(operator_to_enqueue) unless operator_to_enqueue.nil? || operator_to_enqueue.empty?
+    @tail = ""
     identify_start
-    add_step
+    # add_step
     # print_deets
   end
 
   def add_step
-    puts "tails is #{@tail}"
+    puts "tail is #{@tail}"
     print_string = "#{"#{queue} -> " unless queue.empty?}" + "#{@value}" + "#{"---#{@tail}" unless @tail.empty?}"
     puts "adding #{print_string}"
     puts `echo "#{print_string}" >> 910_exp.txt`
@@ -132,7 +133,6 @@ class Expression
     skip_1_char = false
     buffer = ""
     params = []
-    @tail = ""
     @value.chars.each_with_index do |ch, idx|
       number_of_open_brackets += 1 if ch == "("
       number_of_open_brackets -= 1 if ch == ")"
@@ -141,7 +141,9 @@ class Expression
         puts Rainbow("currently: #{params} marked at #{@required_params}").color(:forestgreen)
         if params.size == @required_params
           @tail = @value[(idx + 1)..]
-          puts "i think the tail is #{@tail} from #{idx + 1} onwards" unless @tail.empty?
+          puts @tail
+          @value = @value[..(idx)]
+          puts `echo '#{params}' >> 910_exp.txt`
           return params
         end
         # check if it is a number and break the  format loop
@@ -162,8 +164,9 @@ class Expression
 
     @node = Node.new(*identify_params)
     tranform_retval = @node.transform
+    puts "#{tranform_retval[:new_expression]}"
     add_to_queue(tranform_retval)
-    update_value(tranform_retval)
+    add_tail_and_init(tranform_retval)
     return unless @value.to_i.eql?(@value.to_i) && @queue.empty?
     return unless value_is_a_number?
 
@@ -178,7 +181,8 @@ class Expression
   def add_to_queue(node_transform_hash)
     return unless node_transform_hash[:to_queue]
 
-    puts "this should be true #{node_transform_hash[:to_queue]}"
+    puts "add_to_queue called #{node_transform_hash[:to_queue]}"
+    puts "#{tranform_retval[:new_expression]}"
     if @queue.empty?
       @queue = node_transform_hash[:for_queue]
     else
@@ -186,12 +190,13 @@ class Expression
     end
   end
 
-  def update_value(node_transform_hash)
+  def add_tail_and_init(node_transform_hash)
     value_for_init = if @tail.empty?
                        node_transform_hash[:new_expression]
                      else
                        (node_transform_hash[:new_expression]).to_s + @tail
                      end
+    add_step              
     initialize(value_for_init, *@queue)
   end
 
@@ -224,15 +229,16 @@ end
 #   sza0.solve
 # end
 
-azz0 = Expression.new("A(Z(Z)(0))")
-4.times do
-  azz0.solve
-end
-
-# s5za0 = Expression.new("S(S)(S(S))(S(Z))(A)(0)")
-# 3.times do
-#   s5za0.solve
+# azz0 = Expression.new("A(Z(Z)(0))")
+# 4.times do
+#   azz0.solve
 # end
+
+s5za0 = Expression.new("S(S)(S(S))(S(Z))(A)(0)")
+puts `echo '#{s5za0.value}' >> 910_exp.txt`
+4.times do
+  s5za0.solve
+end
 
 # puts "format 1"
 # sza0.format
