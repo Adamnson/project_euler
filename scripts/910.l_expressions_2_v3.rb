@@ -92,14 +92,13 @@ class Expression
   File.new(@file, "w")
 
   def initialize(exp, *operators_to_enqueue)
-    puts "to initialize with #{exp} #{unless operators_to_enqueue.nil? or operators_to_enqueue.empty?
-                                        "and #{operators_to_enqueue}"
-                                      end}"
+    # puts "to initialize with #{exp} #{unless operators_to_enqueue.nil? or operators_to_enqueue.empty?
+    #                                     "and #{operators_to_enqueue}"
+    #                                   end}"
     @value = exp
     @queue = []
     @queue.push(*operators_to_enqueue) unless operators_to_enqueue.nil? || operators_to_enqueue.empty?
     @tail = ""
-    @do_not_solve = false
     @number_of_steps = @number_of_steps.nil? ? 0 : @number_of_steps + 1
     identify_start
     # add_step
@@ -107,9 +106,7 @@ class Expression
   end
 
   def add_step
-    puts "tail is #{@tail}"
-    print_string = "#{"#{queue} -> " unless queue.empty?}" + "#{@value}" + "#{"---#{@tail}" unless @tail.empty?}"
-    puts "adding #{print_string}"
+    print_string = ("#{queue} -> " unless queue.empty?).to_s + @value.to_s + ("---#{@tail}" unless @tail.empty?).to_s
     puts `echo "#{@number_of_steps}. #{print_string}" >> 910_exp.txt`
   end
 
@@ -140,10 +137,9 @@ class Expression
       number_of_open_brackets -= 1 if ch == ")"
       if number_of_open_brackets.zero? && idx.positive?
         params.append(buffer)
-        puts Rainbow("currently: #{params} marked at #{@required_params}").color(:forestgreen)
+        # puts Rainbow("currently: #{params} marked at #{@required_params}").color(:forestgreen)
         if params.size == @required_params
           @tail = @value[(idx + 1)..]
-          puts @tail
           @value = @value[..(idx)]
           puts `echo '#{params}' >> 910_exp.txt`
           return params
@@ -166,12 +162,7 @@ class Expression
 
     @node = Node.new(*identify_params)
     tranform_retval = @node.transform
-    puts "#{tranform_retval[:new_expression]}"
-    add_to_queue(tranform_retval)
-    val = add_tail_and_init(tranform_retval)
-    val2 = pop_from_queue(tranform_retval)
-    val = val2 unless val2.nil?
-    puts "init val is #{val}"
+    val = update_queue_value_tail(tranform_retval)
     initialize(val, *@queue)
     add_step
     return unless @value.to_i.eql?(@value.to_i) && @queue.empty?
@@ -181,11 +172,18 @@ class Expression
     puts "the value has been identified as #{@value}"
   end
 
+  def update_queue_value_tail(node_transform_hash)
+    add_to_queue(node_transform_hash)
+    val = add_tail_and_init(node_transform_hash)
+    val2 = pop_from_queue(node_transform_hash)
+    val = val2 unless val2.nil?
+    val
+  end
+
   def pop_from_queue(node_transform_hash)
     val = node_transform_hash[:new_expression]
     return unless value_is_a_number?(val) && !@queue.empty?
 
-    puts "identified a number, probably offload queue"
     "#{@queue.pop}(#{val})"
   end
 
@@ -196,8 +194,6 @@ class Expression
   def add_to_queue(node_transform_hash)
     return unless node_transform_hash[:to_queue]
 
-    puts "add_to_queue called #{node_transform_hash[:to_queue]}"
-    puts "#{node_transform_hash[:new_expression]}"
     if @queue.empty?
       @queue = node_transform_hash[:for_queue]
     else
@@ -228,8 +224,9 @@ class Expression
   end
 
   def solve
-    if @do_not_solve
+    if @this_is_the_end
       puts "end"
+      puts `echo 'finished in #{@number_of_steps} steps' >> 910_exp.txt`
       return
     end
     format
@@ -237,7 +234,6 @@ class Expression
 
     # push_from_queue
     puts "solved"
-    @do_not_solve = true
     print_deets
   end
 end
