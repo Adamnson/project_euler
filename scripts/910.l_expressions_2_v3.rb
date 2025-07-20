@@ -248,12 +248,17 @@ end
 #   azz0.solve
 # end
 
-s5za0 = Expression.new("S(S)(S(S))(S(Z))(A)(0)")
-puts `echo '#{s5za0.value}' >> 910_exp.txt`
-50.times do
-  s5za0.solve
-end
+# s5za0 = Expression.new("S(S)(S(S))(S(Z))(A)(0)")
+# puts `echo '#{s5za0.value}' >> 910_exp.txt`
+# 50.times do
+#   s5za0.solve
+# end
 
+# s7za0 = Expression.new("S(S)(S(S))(S(S))(S(Z))(A)(0)")
+# puts `echo '#{s7za0.value}' >> 910_exp.txt`
+# 20_000.times do
+#   s7za0.solve
+# end
 # puts "format 1"
 # sza0.format
 # puts "value check"
