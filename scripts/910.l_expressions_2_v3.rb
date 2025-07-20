@@ -32,14 +32,12 @@ class Node
   def transform
     case @operator
     when "S"
-      puts "#{@params[:v]}-of-(#{@params[:u]}-(#{@params[:v]})-(#{params[:w]}))"
       { new_expression: "#{@params[:v]}(#{@params[:u]}(#{@params[:v]})(#{params[:w]}))",
         to_queue: false }
     when "A"
       if @params[:u].ord.between?(48, 57)
-        { new_expression: ((@params[:u]).to_i + 1), to_queue: false }
+        { new_expression: ((@params[:u]).to_i + 1).to_s, to_queue: false }
       else
-        puts "creating a new expression for #{@params[:u]}"
         { new_expression: @params[:u], for_queue: "A", to_queue: true }
       end
     when "Z"
@@ -94,14 +92,14 @@ class Expression
   File.new(@file, "w")
 
   def initialize(exp, *operators_to_enqueue)
-    puts "to initialize with #{exp} #{"and #{operators_to_enqueue}" unless( operators_to_enqueue.nil? or operators_to_enqueue.empty? )}"
+    puts "to initialize with #{exp} #{unless operators_to_enqueue.nil? or operators_to_enqueue.empty?
+                                        "and #{operators_to_enqueue}"
+                                      end}"
     @value = exp
     @queue = []
-    # operatorProblem needs to handle if array of operators are passed
-    # or if multiple operators are passed
-    # @queue.push(operators_to_enqueue) unless operators_to_enqueue.nil? || operators_to_enqueue.empty?
     @queue.push(*operators_to_enqueue) unless operators_to_enqueue.nil? || operators_to_enqueue.empty?
     @tail = ""
+    @do_not_solve = false
     @number_of_steps = @number_of_steps.nil? ? 0 : @number_of_steps + 1
     identify_start
     # add_step
@@ -170,7 +168,12 @@ class Expression
     tranform_retval = @node.transform
     puts "#{tranform_retval[:new_expression]}"
     add_to_queue(tranform_retval)
-    add_tail_and_init(tranform_retval)
+    val = add_tail_and_init(tranform_retval)
+    val2 = pop_from_queue(tranform_retval)
+    val = val2 unless val2.nil?
+    puts "init val is #{val}"
+    initialize(val, *@queue)
+    add_step
     return unless @value.to_i.eql?(@value.to_i) && @queue.empty?
     return unless value_is_a_number?
 
@@ -178,8 +181,16 @@ class Expression
     puts "the value has been identified as #{@value}"
   end
 
-  def value_is_a_number?
-    @value.ord.between?(48, 57) || @value.ord.between?(0, 9)
+  def pop_from_queue(node_transform_hash)
+    val = node_transform_hash[:new_expression]
+    return unless value_is_a_number?(val) && !@queue.empty?
+
+    puts "identified a number, probably offload queue"
+    "#{@queue.pop}(#{val})"
+  end
+
+  def value_is_a_number?(v = @value)
+    v.ord.between?(48, 57) || v.ord.between?(0, 9)
   end
 
   def add_to_queue(node_transform_hash)
@@ -195,17 +206,15 @@ class Expression
   end
 
   def add_tail_and_init(node_transform_hash)
-    value_for_init = if @tail.empty?
-                       node_transform_hash[:new_expression]
-                     else
-                       (node_transform_hash[:new_expression]).to_s + @tail
-                     end
-    # this sends each operators in queue as elements operatorProblem                 
-    initialize(value_for_init, *@queue) 
-    add_step
+    if @tail.empty?
+      node_transform_hash[:new_expression]
+    else
+      (node_transform_hash[:new_expression]).to_s + @tail
+    end
   end
 
   def push_from_queue
+    puts "echo 'pushing from queue' >> 910_exp.txt"
     initialize("#{@queue.last}(#{@value})", @queue.slice(..-2))
   end
 
@@ -219,11 +228,16 @@ class Expression
   end
 
   def solve
+    if @do_not_solve
+      puts "end"
+      return
+    end
     format
-    return unless value_is_a_number?
+    return unless value_is_a_number? && @queue.empty?
 
-    push_from_queue
+    # push_from_queue
     puts "solved"
+    @do_not_solve = true
     print_deets
   end
 end
