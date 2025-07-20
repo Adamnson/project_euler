@@ -69,7 +69,7 @@ end
 # @queue :
 # @required_params :
 # @file :
-# @solved_internal_expression :
+# @count :
 # #initialize
 # #identify_start : identifies the start of the expression
 # #identify_params : depending on the start of the expression, identifies "n" params
@@ -85,11 +85,11 @@ end
 class Expression
   attr_accessor :node, :value, :queue, :tail
 
-  @value = ""
-  @node = nil
-  @identified_operator = ""
-  @required_params = 0
-  @solved_internal_expression = false
+  # @value = ""
+  # @node = nil
+  # @identified_operator = ""
+  # @required_params = 0
+  # @number_of_steps = 0
   @file = "910_exp.txt"
   File.new(@file, "w")
 
@@ -99,6 +99,7 @@ class Expression
     @queue = []
     @queue.push(operator_to_enqueue) unless operator_to_enqueue.nil? || operator_to_enqueue.empty?
     @tail = ""
+    @number_of_steps = @number_of_steps.nil? ? 1 : @number_of_steps + 1
     identify_start
     # add_step
     # print_deets
@@ -108,7 +109,7 @@ class Expression
     puts "tail is #{@tail}"
     print_string = "#{"#{queue} -> " unless queue.empty?}" + "#{@value}" + "#{"---#{@tail}" unless @tail.empty?}"
     puts "adding #{print_string}"
-    puts `echo "#{print_string}" >> 910_exp.txt`
+    puts `echo "#{@number_of_steps}. #{print_string}" >> 910_exp.txt`
   end
 
   def identify_start
@@ -217,7 +218,6 @@ class Expression
     format
     return unless value_is_a_number?
 
-    @solved_internal_expression = true
     push_from_queue
     puts "solved"
     print_deets
