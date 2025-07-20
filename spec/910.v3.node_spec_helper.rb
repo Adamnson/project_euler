@@ -29,12 +29,15 @@ describe Node do
 
   describe "check transformation for A operator" do
     it "increments the value by 1 if the parameter is a number (PASSED AS STRING), to_queue flag is false" do
-      output_hashes = (0..10_000).to_a.map { |i| Node.new(i.to_s) } # need to pass strings NOT INTEGERS
-                                 .map(&:transform)
+      upper_limit = 10_000
+      output_hashes = (0..upper_limit).to_a.map { |i| Node.new(i.to_s) } # need to pass strings NOT INTEGERS
+                                      .map(&:transform)
       output_hashes.map { |out| expect(out).to have_key(:new_expression) }
       output_hashes.map { |out| expect(out).to have_key(:to_queue) }
       output_hashes.map { |out| expect(out).not_to have_key(:for_queue) }
-      expect(output_hashes).to match_array((1..10_001).to_a.map { |n| { new_expression: n, to_queue: false } })
+      expect(output_hashes).to match_array((1..(upper_limit + 1)).to_a.map do |n|
+        { new_expression: n.to_s, to_queue: false }
+      end)
     end
 
     it "passes the parameter to create a new expression, adds 'A' to queue, to_queue flag is true" do
