@@ -93,13 +93,16 @@ class Expression
   @file = "910_exp.txt"
   File.new(@file, "w")
 
-  def initialize(exp, operator_to_enqueue = nil)
-    puts "to initialize with #{exp} #{"and #{operator_to_enqueue}" unless operator_to_enqueue.nil?}"
+  def initialize(exp, *operators_to_enqueue)
+    puts "to initialize with #{exp} #{"and #{operators_to_enqueue}" unless( operators_to_enqueue.nil? or operators_to_enqueue.empty? )}"
     @value = exp
     @queue = []
-    @queue.push(operator_to_enqueue) unless operator_to_enqueue.nil? || operator_to_enqueue.empty?
+    # operatorProblem needs to handle if array of operators are passed
+    # or if multiple operators are passed
+    # @queue.push(operators_to_enqueue) unless operators_to_enqueue.nil? || operators_to_enqueue.empty?
+    @queue.push(*operators_to_enqueue) unless operators_to_enqueue.nil? || operators_to_enqueue.empty?
     @tail = ""
-    @number_of_steps = @number_of_steps.nil? ? 1 : @number_of_steps + 1
+    @number_of_steps = @number_of_steps.nil? ? 0 : @number_of_steps + 1
     identify_start
     # add_step
     # print_deets
@@ -183,7 +186,7 @@ class Expression
     return unless node_transform_hash[:to_queue]
 
     puts "add_to_queue called #{node_transform_hash[:to_queue]}"
-    puts "#{tranform_retval[:new_expression]}"
+    puts "#{node_transform_hash[:new_expression]}"
     if @queue.empty?
       @queue = node_transform_hash[:for_queue]
     else
@@ -197,8 +200,9 @@ class Expression
                      else
                        (node_transform_hash[:new_expression]).to_s + @tail
                      end
-    add_step              
-    initialize(value_for_init, *@queue)
+    # this sends each operators in queue as elements operatorProblem                 
+    initialize(value_for_init, *@queue) 
+    add_step
   end
 
   def push_from_queue
@@ -236,7 +240,7 @@ end
 
 s5za0 = Expression.new("S(S)(S(S))(S(Z))(A)(0)")
 puts `echo '#{s5za0.value}' >> 910_exp.txt`
-4.times do
+50.times do
   s5za0.solve
 end
 
