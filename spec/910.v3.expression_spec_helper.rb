@@ -47,4 +47,31 @@ describe Expression do
       expect(e.value).to eql("6")
     end
   end
+
+  describe "check queuing of A operator" do
+    it "adds A to the queue if the parameter is not a number" do
+      e = Expression.new("A(A(A(A(A(A(0))))))")
+      e.solve
+      expect(e.queue).to match_array(["A"])
+      expect(e.value).to eql("A(A(A(A(A(0)))))")
+      3.times do
+        e.solve
+      end
+      expect(e.queue).to match_array(%w[A A A A])
+      expect(e.value).to eql("A(A(0))")
+      2.times do
+        e.solve
+      end
+      expect(e.queue).to match_array(%w[A A A A])
+      expect(e.value).to eql("A(1)")
+      4.times do
+        e.solve
+      end
+      expect(e.queue).to match_array(%w[])
+      expect(e.value).to eql("A(5)")
+      e.solve
+      expect(e.queue).to match_array(%w[])
+      expect(e.value).to eql("6")
+    end
+  end
 end
