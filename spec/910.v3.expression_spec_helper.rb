@@ -27,4 +27,24 @@ describe Expression do
       expect { e.format }.to change(e, :value).from("A(0)").to("1")
     end
   end
+
+  describe "check S(Z)(A)(0)" do
+    it "evaluates to 1" do
+      e = Expression.new("S(Z)(A)(0)")
+      4.times do
+        e.solve
+      end
+      expect(e.value).to eql("1")
+    end
+  end
+
+  describe "check S(S)(S(S))(S(Z))(A)(0)" do
+    it "evaluates to 6" do
+      e = Expression.new("S(S)(S(S))(S(Z))(A)(0)")
+      43.times do
+        e.solve
+      end
+      expect(e.value).to eql("6")
+    end
+  end
 end
